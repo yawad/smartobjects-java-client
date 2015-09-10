@@ -1,0 +1,8 @@
+{
+    "object_id" : "test224",
+	"x_registration_latitude" : "20.22",
+	"x_registration_longitude" : "12.12",
+	"x_registration_elevation" : "6689.22",
+	"x_object_type" : "thermostat",
+	"x_registration_date":"2015-01-27T08:01:01.000Z"
+}
