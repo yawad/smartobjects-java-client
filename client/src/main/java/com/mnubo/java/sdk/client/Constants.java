@@ -17,17 +17,18 @@ public interface Constants {
     String SECUTIRY = "client.security.";
     String SECURITY_CONSUMER_KEY = SECUTIRY + "consumer-key";
     String SECURITY_CONSUMER_SECRET = SECUTIRY + "consumer-secret";
-    String HTTP = "client.http.client.";
-    String HTTP_DISABLE_REDIRECT_HANDLING = HTTP + "disable-redirect-handling";
-    String HTTP_DISABLE_AUTOMATIC_RETRIES = HTTP + "disable-automatic-retries";
-    String HTTP_MAX_CONNECTIONS_PER_ROUTE = HTTP + "max-connections-per-route";
-    String HTTP_DEFAULT_TIMEOUT = HTTP + "http.client.default-timeout";
-    String HTTP_CONNECT_TIMEOUT = HTTP + "http.client.connect-timeout";
-    String HTTP_CONNECTION_REQUEST_TIMEOUT = HTTP + "http.client.connection-request-timeout";
-    String HTTP_SOCKET_TIMEOUT = HTTP + "http.client.socket-timeout";
-    String HTTP_MAX_TOTAL_CONNECTION = HTTP + "max-total-connection";
-    String HTTP_BASE_PATH = HTTP + "base-path";
+    String CLIENT = "client.http.client.";
+    String CLIENT_DISABLE_REDIRECT_HANDLING = CLIENT + "disable-redirect-handling";
+    String CLIENT_DISABLE_AUTOMATIC_RETRIES = CLIENT + "disable-automatic-retries";
+    String CLIENT_MAX_CONNECTIONS_PER_ROUTE = CLIENT + "max-connections-per-route";
+    String CLIENT_DEFAULT_TIMEOUT = CLIENT + "http.client.default-timeout";
+    String CLIENT_CONNECT_TIMEOUT = CLIENT + "http.client.connect-timeout";
+    String CLIENT_CONNECTION_REQUEST_TIMEOUT = CLIENT + "connection-request-timeout";
+    String CLIENT_SOCKET_TIMEOUT = CLIENT + "http.client.socket-timeout";
+    String CLIENT_MAX_TOTAL_CONNECTION = CLIENT + "max-total-connection";
+    String CLIENT_BASE_PATH = CLIENT + "base-path";
 
+    int CLIENT_VALIDATE_INACTIVITY_SERVER = 1000;
     int MAX_PORT_VALUE = 65536;
 
     // Server
@@ -39,5 +40,7 @@ public interface Constants {
     String TOKEN_GRANT_TYPE = "grant_type";
     String TOKEN_GRANT_TYPE_VALUE = "client_credentials";
     String TOKEN_SCOPE = "scope";
+
+    long FLETCHING_TOKEN_MILISEC = 5000;
 
 }
