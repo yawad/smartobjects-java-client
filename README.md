@@ -16,7 +16,7 @@ Add the following into your pom.xml:
 </dependency>
 ```
 ### Download source code
-Download the source code and include it in your Java Application project. All codes are available in the **mnubo-java-sdk-client**.
+Download the source code and include it in your Java Application project.
 
 ## Usage
 ---
