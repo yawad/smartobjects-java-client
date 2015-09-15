@@ -76,7 +76,7 @@ public final class Event {
             this.timestamp = now();
         }
         if (timeseries != null) {
-            this.timeseries = timeseries;
+            this.timeseries = new HashMap<String, Object>(timeseries);
         }
         else {
             this.timeseries = new HashMap<String, Object>();

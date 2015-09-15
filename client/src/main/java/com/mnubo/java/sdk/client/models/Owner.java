@@ -66,7 +66,7 @@ public final class Owner {
             this.registrationDate = now();
         }
         if (attributes != null) {
-            this.attributes = attributes;
+            this.attributes = new HashMap<String, Object>(attributes);
         }
         else {
             this.attributes = new HashMap<String, Object>();

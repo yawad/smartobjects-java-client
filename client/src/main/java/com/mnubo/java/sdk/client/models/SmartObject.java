@@ -79,7 +79,7 @@ public final class SmartObject {
         }
         this.owner = owner;
         if (attributes != null) {
-            this.attributes = attributes;
+            this.attributes = new HashMap<String, Object>(attributes);
         }
         else {
             this.attributes = new HashMap<String, Object>();
