@@ -12,7 +12,7 @@
  * ---------------------------------------------------------------------------
  */
 
-package client;
+package com.mnubo.java.sdk.client.example;
 
 import java.util.HashMap;
 import java.util.List;
