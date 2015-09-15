@@ -15,16 +15,16 @@
 package com.mnubo.java.sdk.client.config;
 
 import static com.mnubo.java.sdk.client.Constants.AUTHENTICATION_PORT;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_BASE_PATH;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECTION_REQUEST_TIMEOUT;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECT_TIMEOUT;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_DEFAULT_TIMEOUT;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_AUTOMATIC_RETRIES;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_REDIRECT_HANDLING;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_CONNECTIONS_PER_ROUTE;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_TOTAL_CONNECTION;
+import static com.mnubo.java.sdk.client.Constants.CLIENT_SOCKET_TIMEOUT;
 import static com.mnubo.java.sdk.client.Constants.HOST_NAME;
-import static com.mnubo.java.sdk.client.Constants.HTTP_BASE_PATH;
-import static com.mnubo.java.sdk.client.Constants.HTTP_CONNECTION_REQUEST_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.HTTP_CONNECT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.HTTP_DEFAULT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.HTTP_DISABLE_AUTOMATIC_RETRIES;
-import static com.mnubo.java.sdk.client.Constants.HTTP_DISABLE_REDIRECT_HANDLING;
-import static com.mnubo.java.sdk.client.Constants.HTTP_MAX_CONNECTIONS_PER_ROUTE;
-import static com.mnubo.java.sdk.client.Constants.HTTP_MAX_TOTAL_CONNECTION;
-import static com.mnubo.java.sdk.client.Constants.HTTP_SOCKET_TIMEOUT;
 import static com.mnubo.java.sdk.client.Constants.PLATFORM_PORT;
 import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_KEY;
 import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_SECRET;
@@ -43,7 +43,7 @@ public class MnuboSDKConfig {
     private final int DEFAULT_TIMEOUT = 15000;
     private final int DEFAULT_HOST_PORT = 443;
     private final String DEFAULT_SCOPE = "ALL";
-    private final String DEFAULT_HTTP_PROTOCOL = "https";
+    private final String DEFAULT_CLIENT_PROTOCOL = "https";
     private final String DEFAULT_BASE_PATH = "/api/v3";
     private final boolean DEFAULT_DISSABLE_COOKIE_MANAGEMENT = true;
     private final boolean DEFAULT_DISABLE_REDIRECT_HANDLING = false;
@@ -59,7 +59,7 @@ public class MnuboSDKConfig {
     private int platformPort = DEFAULT_HOST_PORT;
     private int authenticationPort = DEFAULT_HOST_PORT;
     private String scope = DEFAULT_SCOPE;
-    private String httpProtocol = DEFAULT_HTTP_PROTOCOL;
+    private String httpProtocol = DEFAULT_CLIENT_PROTOCOL;
     private boolean httpDisableCockieManagement = DEFAULT_DISSABLE_COOKIE_MANAGEMENT;
     private boolean httpDisableRedirectHandling = DEFAULT_DISABLE_REDIRECT_HANDLING;
     private boolean httpDisableAutomaticRetries = DEFAULT_DISABLE_AUTOMATIC_RETRIES;
@@ -97,40 +97,40 @@ public class MnuboSDKConfig {
     }
 
     public void setHttpDisableRedirectHandling(String httpDisableRedirectHandling) {
-        this.httpDisableRedirectHandling = parseAsBoolean(httpDisableRedirectHandling, HTTP_DISABLE_REDIRECT_HANDLING);
+        this.httpDisableRedirectHandling = parseAsBoolean(httpDisableRedirectHandling, CLIENT_DISABLE_REDIRECT_HANDLING);
     }
 
     public void setHttpDisableAutomaticRetries(String httpDisableAutomaticRetries) {
-        this.httpDisableAutomaticRetries = parseAsBoolean(httpDisableAutomaticRetries, HTTP_DISABLE_AUTOMATIC_RETRIES);
+        this.httpDisableAutomaticRetries = parseAsBoolean(httpDisableAutomaticRetries, CLIENT_DISABLE_AUTOMATIC_RETRIES);
     }
 
     public void setHttpMaxConnectionPerRoute(String maxConnectionPerRoute) {
-        this.httpMaxConnectionPerRoute = parseAsInteger(maxConnectionPerRoute, HTTP_MAX_CONNECTIONS_PER_ROUTE);
+        this.httpMaxConnectionPerRoute = parseAsInteger(maxConnectionPerRoute, CLIENT_MAX_CONNECTIONS_PER_ROUTE);
     }
 
     public void setHttpDefaultTimeout(String httpDefaultTimeout) {
-        this.httpDefaultTimeout = parseAsInteger(httpDefaultTimeout, HTTP_DEFAULT_TIMEOUT);
+        this.httpDefaultTimeout = parseAsInteger(httpDefaultTimeout, CLIENT_DEFAULT_TIMEOUT);
     }
 
     public void setHttpConnectionTiemout(String httpConnectionTiemout) {
-        this.httpConnectionTiemout = parseAsInteger(httpConnectionTiemout, HTTP_CONNECT_TIMEOUT);
+        this.httpConnectionTiemout = parseAsInteger(httpConnectionTiemout, CLIENT_CONNECT_TIMEOUT);
     }
 
     public void setHttpConnectionRequestTimeout(String httpConnectionRequestTimeout) {
         this.httpConnectionRequestTimeout = parseAsInteger(httpConnectionRequestTimeout,
-                HTTP_CONNECTION_REQUEST_TIMEOUT);
+                CLIENT_CONNECTION_REQUEST_TIMEOUT);
     }
 
     public void setHttpMaxTotalConnection(String maxTotalConnection) {
-        this.httpMaxTotalConnection = parseAsInteger(maxTotalConnection, HTTP_MAX_TOTAL_CONNECTION);
+        this.httpMaxTotalConnection = parseAsInteger(maxTotalConnection, CLIENT_MAX_TOTAL_CONNECTION);
     }
 
     public void setHttpSoketTimeout(String httpSoketTimeout) {
-        this.httpSoketTimeout = parseAsInteger(httpSoketTimeout, HTTP_SOCKET_TIMEOUT);
+        this.httpSoketTimeout = parseAsInteger(httpSoketTimeout, CLIENT_SOCKET_TIMEOUT);
     }
 
     public void setHttpBasePath(String basePath) {
-        this.basePath = parseAsString(basePath, HTTP_BASE_PATH);
+        this.basePath = parseAsString(basePath, CLIENT_BASE_PATH);
     }
 
     public String getHostName() {

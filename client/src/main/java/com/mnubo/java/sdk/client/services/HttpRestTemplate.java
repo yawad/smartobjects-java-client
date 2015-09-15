@@ -14,6 +14,8 @@
 
 package com.mnubo.java.sdk.client.services;
 
+import static com.mnubo.java.sdk.client.Constants.CLIENT_VALIDATE_INACTIVITY_SERVER;
+
 import java.util.List;
 
 import org.apache.http.HttpHost;
@@ -33,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mnubo.java.sdk.client.config.MnuboSDKConfig;
 import com.mnubo.java.sdk.client.mapper.SDKObjectMapperConfig;
 
-public class HttpRestTemplate {
+class HttpRestTemplate {
     private RestTemplate restTemplate;
 
     HttpRestTemplate(MnuboSDKConfig config) {
@@ -65,7 +67,7 @@ public class HttpRestTemplate {
         connectionManager.setDefaultMaxPerRoute(config.getHttpMaxConnectionPerRoute());
         connectionManager.setMaxPerRoute(new HttpRoute(new HttpHost(config.getHostName())),
                 config.getHttpMaxConnectionPerRoute());
-        connectionManager.setValidateAfterInactivity(config.getHttpDefaultTimeout());
+        connectionManager.setValidateAfterInactivity(CLIENT_VALIDATE_INACTIVITY_SERVER);
 
         // Building httpclient
         HttpClientBuilder httpClientsBuilder = HttpClients.custom().setDefaultRequestConfig(requestConfig);

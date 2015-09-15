@@ -23,11 +23,11 @@ import java.util.List;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.mnubo.java.sdk.client.factory.MnuboSDKFactory;
 import com.mnubo.java.sdk.client.mapper.SDKMapperUtils;
 import com.mnubo.java.sdk.client.models.Event;
 import com.mnubo.java.sdk.client.models.Owner;
 import com.mnubo.java.sdk.client.models.SmartObject;
+import com.mnubo.java.sdk.client.services.MnuboSDKFactory;
 import com.mnubo.java.sdk.client.spi.EventsSDK;
 import com.mnubo.java.sdk.client.spi.MnuboSDKClient;
 import com.mnubo.java.sdk.client.spi.ObjectsSDK;
@@ -101,7 +101,7 @@ public class MyAppTest {
 
     private static void sendEvent(String objectId, String eventsName) throws IOException {
         // ********* loading event file *******
-        String events2BePosted = ReadingFile(eventsName);
+        String events2BePosted = readingFile(eventsName);
         List<Event> events = SDKMapperUtils.readValue(events2BePosted, new TypeReference<List<Event>>() {
         });
         System.out.println("Reading event");
@@ -114,7 +114,7 @@ public class MyAppTest {
 
     private static void sendEvent(String eventsName) throws IOException {
         // ********* loading object file *******
-        String events2BePosted = ReadingFile(eventsName);
+        String events2BePosted = readingFile(eventsName);
         List<Event> events = SDKMapperUtils.readValue(events2BePosted, new TypeReference<List<Event>>() {
         });
         System.out.println("Reading event");
@@ -127,7 +127,7 @@ public class MyAppTest {
 
     private static void createObject(String objectName) throws IOException {
         // ********* loading object file *******
-        String object2BePosted = ReadingFile(objectName);
+        String object2BePosted = readingFile(objectName);
         SmartObject object = SDKMapperUtils.readValue(object2BePosted, SmartObject.class);
         System.out.println("Reading Object");
 
@@ -138,7 +138,7 @@ public class MyAppTest {
 
     private static void createOwner(String ownerName) throws IOException {
         // ********* loading object file *******
-        String owner2BePosted = ReadingFile(ownerName);
+        String owner2BePosted = readingFile(ownerName);
         Owner owner = SDKMapperUtils.readValue(owner2BePosted, Owner.class);
         System.out.println("Reading owner");
 
@@ -147,7 +147,7 @@ public class MyAppTest {
         System.out.println("owner created");
     }
 
-    private static String ReadingFile(String fileName) throws IOException {
+    private static String readingFile(String fileName) throws IOException {
         String result = "";
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         try {

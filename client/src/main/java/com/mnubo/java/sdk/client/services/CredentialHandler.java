@@ -14,6 +14,7 @@
 
 package com.mnubo.java.sdk.client.services;
 
+import static com.mnubo.java.sdk.client.Constants.FLETCHING_TOKEN_MILISEC;
 import static com.mnubo.java.sdk.client.Constants.TOKEN_CONSUMER_SEPARATOR;
 import static com.mnubo.java.sdk.client.Constants.TOKEN_GRANT_TYPE;
 import static com.mnubo.java.sdk.client.Constants.TOKEN_GRANT_TYPE_VALUE;
@@ -32,8 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.mnubo.java.sdk.client.config.MnuboSDKConfig;
 
-public class CredentialHandler {
-    private static long FLETCHING_TOKEN_MILISEC = 5000;
+class CredentialHandler {
     private MnuboSDKConfig config;
     private Token credentials;
     private RestTemplate restTemplate;
