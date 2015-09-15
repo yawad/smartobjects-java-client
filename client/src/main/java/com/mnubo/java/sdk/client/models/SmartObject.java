@@ -202,14 +202,14 @@ public final class SmartObject {
     }
 
     /**
-     * returns attribute of the SmartObject. it returns an empty map if there are not
+     * returns a copy of smartobject's attribute. it returns an empty map if there are not
      * attributes.
      *
      * @return attributes.
      *
      */
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return new HashMap<String, Object>(attributes);
     }
 
     /**

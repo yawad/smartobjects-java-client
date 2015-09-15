@@ -198,14 +198,14 @@ public final class Event {
     }
 
     /**
-     * returns timeseries of the event. it returns an empty map if there are not
+     * returns a copy of event's timeseries. it returns an empty map if there are not
      * timeseries.
      *
      * @return timeseries.
      *
      */
     public Map<String, Object> getTimeseries() {
-        return timeseries;
+        return new HashMap<String, Object>(timeseries);
     }
 
     /**

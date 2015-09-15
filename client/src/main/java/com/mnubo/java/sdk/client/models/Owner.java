@@ -173,14 +173,14 @@ public final class Owner {
     }
 
     /**
-     * returns attribute of the Owner. It returns an empty map if there are not
+     * returns a copy of owner's attribute. It returns an empty map if there are not
      * attributes.
      *
      * @return attributes.
      *
      */
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return new HashMap<String, Object>(attributes);
     }
 
     /**
