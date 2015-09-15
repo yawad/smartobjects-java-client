@@ -43,4 +43,6 @@ public interface Constants {
 
     long FLETCHING_TOKEN_MILISEC = 5000;
 
+    String PRINT_OBJECT_NULL = "";
+
 }

@@ -14,6 +14,8 @@
 
 package com.mnubo.java.sdk.client.models;
 
+import static com.mnubo.java.sdk.client.Constants.PRINT_OBJECT_NULL;
+import static com.mnubo.java.sdk.client.models.SmartObject.DEVICE_ID;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
 import static org.joda.time.DateTime.now;
 
@@ -259,6 +261,37 @@ public final class Event {
      */
     public DateTime getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder toPrint = new StringBuilder();
+        toPrint.append("{\n");
+        toPrint.append(line2String(OBJECT + "." + DEVICE_ID, smartObject != null ? smartObject.getDeviceId() : null));
+        toPrint.append(line2String(EVENT_ID, eventId));
+        toPrint.append(line2String(EVENT_TYPE, eventType));
+        toPrint.append(line2String(TIMESTAMP, timestamp));
+        for (Map.Entry<String, Object> entry : timeseries.entrySet()) {
+            toPrint.append(line2String(entry.getKey(), entry.getValue()));
+        }
+        toPrint.append("}\n");
+        return toPrint.toString();
+
+    }
+
+    private String line2String(String name, Object value) {
+        StringBuilder build = new StringBuilder();
+        if (name != null) {
+            build.append("     " + name + " : ");
+            if (value != null) {
+                build.append(value);
+            }
+            else {
+                build.append(PRINT_OBJECT_NULL);
+            }
+            build.append("\n");
+        }
+        return build.toString();
     }
 
 }

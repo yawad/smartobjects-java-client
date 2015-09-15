@@ -14,6 +14,8 @@
 
 package com.mnubo.java.sdk.client.models;
 
+import static com.mnubo.java.sdk.client.Constants.PRINT_OBJECT_NULL;
+import static com.mnubo.java.sdk.client.models.Owner.USERNAME;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
 import static org.joda.time.DateTime.now;
 
@@ -273,6 +275,38 @@ public final class SmartObject {
      */
     public Owner getOwner() {
         return owner;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder toPrint = new StringBuilder();
+        toPrint.append("{\n");
+        toPrint.append(line2String(DEVICE_ID, deviceId));
+        toPrint.append(line2String("OBJECT_ID", objectId));
+        toPrint.append(line2String(OBJECT_TYPE, objectType));
+        toPrint.append(line2String(REGISTRATION_DATE, registrationDate));
+        toPrint.append(line2String(OWNER + "." + USERNAME, owner != null ? owner.getUsername() : null));
+        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+            toPrint.append(line2String(entry.getKey(), entry.getValue()));
+        }
+        toPrint.append("}\n");
+        return toPrint.toString();
+
+    }
+
+    private String line2String(String name, Object value) {
+        StringBuilder build = new StringBuilder();
+        if (name != null) {
+            build.append("     " + name + " : ");
+            if (value != null) {
+                build.append(value);
+            }
+            else {
+                build.append(PRINT_OBJECT_NULL);
+            }
+            build.append("\n");
+        }
+        return build.toString();
     }
 
 }

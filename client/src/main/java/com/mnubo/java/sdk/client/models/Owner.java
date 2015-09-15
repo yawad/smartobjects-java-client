@@ -14,6 +14,7 @@
 
 package com.mnubo.java.sdk.client.models;
 
+import static com.mnubo.java.sdk.client.Constants.PRINT_OBJECT_NULL;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
 import static org.joda.time.DateTime.now;
 
@@ -211,6 +212,36 @@ public final class Owner {
      */
     public DateTime getRegistrationDate() {
         return registrationDate;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder toPrint = new StringBuilder();
+        toPrint.append("{\n");
+        toPrint.append(line2String(USERNAME, username));
+        toPrint.append(line2String(PASSWORD, password));
+        toPrint.append(line2String(REGISTRATION_DATE, registrationDate));
+        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+            toPrint.append(line2String(entry.getKey(), entry.getValue()));
+        }
+        toPrint.append("}\n");
+        return toPrint.toString();
+
+    }
+
+    private String line2String(String name, Object value) {
+        StringBuilder build = new StringBuilder();
+        if (name != null) {
+            build.append("     " + name + " : ");
+            if (value != null) {
+                build.append(value);
+            }
+            else {
+                build.append(PRINT_OBJECT_NULL);
+            }
+            build.append("\n");
+        }
+        return build.toString();
     }
 
 }
