@@ -36,13 +36,7 @@ abstract class AbstractSDKService {
         // entity
         HttpEntity<?> request = new HttpEntity<Object>(getAutorizationHeader());
 
-        // send request
-        try {
-            template.postForEntity(url, request, String.class);
-        }
-        catch (Exception ex) {
-            throw ex;
-        }
+        template.postForEntity(url, request, String.class);
     }
 
     protected <T> T postRequest(String url, Class<T> objectClass, Object object) {
@@ -50,12 +44,7 @@ abstract class AbstractSDKService {
         HttpEntity<?> request = new HttpEntity<Object>(object, getAutorizationHeader());
 
         // send request
-        try {
-            return template.postForObject(url, request, objectClass);
-        }
-        catch (Exception ex) {
-            throw ex;
-        }
+        return template.postForObject(url, request, objectClass);
 
     }
 
