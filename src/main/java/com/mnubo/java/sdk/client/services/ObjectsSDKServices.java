@@ -15,7 +15,7 @@
 package com.mnubo.java.sdk.client.services;
 
 import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 
 import com.mnubo.java.sdk.client.models.SmartObject;
 import com.mnubo.java.sdk.client.spi.ObjectsSDK;
@@ -33,8 +33,8 @@ class ObjectsSDKServices implements ObjectsSDK {
         // url
         final String url = sdkCommonServices.getBaseUri().path(OBJECT_PATH).build().toString();
 
-        validIsBlank(object.getObjectType(), "X_Object_Type cannot be null or empty");
-        validIsBlank(object.getDeviceId(), "X_Device_Id cannot be null or empty");
+        notBlank(object.getObjectType(), "X_Object_Type cannot be blank.");
+        notBlank(object.getDeviceId(), "X_Device_Id cannot be blank.");
 
         // posting
         sdkCommonServices. postRequest(url, SmartObject.class, object);
@@ -43,7 +43,7 @@ class ObjectsSDKServices implements ObjectsSDK {
 
     @Override
     public void update(SmartObject object, String deviceId) {
-        validIsBlank(deviceId, "X_Device_Id cannot be null or empty");
+        notBlank(deviceId, "X_Device_Id cannot be blank.");
 
         // url
         final String url = sdkCommonServices.getBaseUri().path(OBJECT_PATH).pathSegment(deviceId).build().toString();
@@ -54,7 +54,7 @@ class ObjectsSDKServices implements ObjectsSDK {
 
     @Override
     public void delete(String deviceId) {
-        validIsBlank(deviceId, "X_Device_Id cannot be null or empty");
+        notBlank(deviceId, "X_Device_Id cannot be blank.");
 
         // url
         final String url = sdkCommonServices.getBaseUri().path(OBJECT_PATH).pathSegment(deviceId).build().toString();

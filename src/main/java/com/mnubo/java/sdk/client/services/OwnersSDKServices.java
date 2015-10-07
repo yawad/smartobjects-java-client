@@ -14,7 +14,7 @@
 
 package com.mnubo.java.sdk.client.services;
 
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 
 import com.mnubo.java.sdk.client.models.Owner;
 import com.mnubo.java.sdk.client.spi.OwnersSDK;
@@ -33,7 +33,7 @@ class OwnersSDKServices implements OwnersSDK {
         // url
         final String url = sdkCommonServices.getBaseUri().path(OWNER_PATH).build().toString();
 
-        validIsBlank(owner.getUsername(), "usermame cannot be null or empty");
+        notBlank(owner.getUsername(), "usermame cannot be blank.");
 
         // posting
         sdkCommonServices.postRequest(url, Owner.class, owner);
@@ -41,8 +41,8 @@ class OwnersSDKServices implements OwnersSDK {
 
     @Override
     public void claim(String username, String deviceId) {
-        validIsBlank(username, "usermame cannot be null or empty");
-        validIsBlank(deviceId, "deviceId cannot be null or empty");
+        notBlank(username, "usermame cannot be blank.");
+        notBlank(deviceId, "deviceId cannot be blank.");
 
         // url
         final String url = sdkCommonServices.getBaseUri().path(OWNER_PATH).pathSegment(username, "objects", deviceId, "claim")
@@ -53,7 +53,7 @@ class OwnersSDKServices implements OwnersSDK {
 
     @Override
     public void update(Owner owner, String username) {
-        validIsBlank(username, "usermame cannot be null or empty");
+        notBlank(username, "usermame cannot be blank.");
 
         // url
         final String url = sdkCommonServices.getBaseUri().path(OWNER_PATH).pathSegment(username).build().toString();
@@ -64,7 +64,7 @@ class OwnersSDKServices implements OwnersSDK {
 
     @Override
     public void delete(String username) {
-        validIsBlank(username, "usermame cannot be null or empty");
+        notBlank(username, "usermame cannot be blank.");
 
         // url
         final String url = sdkCommonServices.getBaseUri().path(OWNER_PATH).pathSegment(username).build().toString();
