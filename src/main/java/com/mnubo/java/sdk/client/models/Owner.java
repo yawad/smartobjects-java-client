@@ -15,11 +15,10 @@
 package com.mnubo.java.sdk.client.models;
 
 import static com.mnubo.java.sdk.client.Constants.PRINT_OBJECT_NULL;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
-import static org.joda.time.DateTime.now;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -50,21 +49,23 @@ public final class Owner {
      */
     public static final String USERNAME = "username";
 
+    /**
+     * {@value #EVENT_ID} Constant key used during the deserialization and serialization
+     * of json files.
+     */
+    public static final String EVENT_ID = "event_id";
+
     private final String username;
     private final String password;
     private final DateTime registrationDate;
     private final Map<String, Object> attributes;
+    private final UUID eventId;
 
-    Owner(String username, String password, DateTime registrationDate, Map<String, Object> attributes) {
-        validIsBlank(username, "usermame cannot be null or empty");
+    Owner(String username, String password, DateTime registrationDate, Map<String, Object> attributes, UUID eventId) {
         this.username = username;
         this.password = password;
-        if (registrationDate != null) {
-            this.registrationDate = registrationDate;
-        }
-        else {
-            this.registrationDate = now();
-        }
+        this.registrationDate = registrationDate;
+        this.eventId = eventId;
         if (attributes != null) {
             this.attributes = new HashMap<String, Object>(attributes);
         }
@@ -91,8 +92,9 @@ public final class Owner {
 
         private String username;
         private String password;
-        private DateTime registrationDate = now();
+        private DateTime registrationDate;
         private Map<String, Object> attributes = new HashMap<String, Object>();
+        private UUID eventId;
 
         OwnerBuilder() {
 
@@ -162,13 +164,26 @@ public final class Owner {
         }
 
         /**
+         * Add an event Id to the request.
+         *
+         * @param eventId: event Id.
+         * @return OwnerBuilder: current Owner builder.
+         *
+         */
+        public OwnerBuilder withEventId(UUID eventId)
+        {
+            this.eventId = eventId;
+            return this;
+        }
+
+        /**
          * Build the immutable Owner instance with the parameters set. Note that username
          * parameter is mandatory.
          *
          * @return Owner: immutable Owner instance built
          */
         public Owner build() {
-            return new Owner(username, password, registrationDate, attributes);
+            return new Owner(username, password, registrationDate, attributes, eventId);
         }
 
     }
@@ -214,6 +229,16 @@ public final class Owner {
         return registrationDate;
     }
 
+    /**
+     * returns the event id associate to each request.
+     *
+     * @return event id.
+     *
+     */
+    public UUID getEventId() {
+        return eventId;
+    }
+
     @Override
     public String toString() {
         StringBuilder toPrint = new StringBuilder();
@@ -221,6 +246,7 @@ public final class Owner {
         toPrint.append(line2String(USERNAME, username));
         toPrint.append(line2String(PASSWORD, password));
         toPrint.append(line2String(REGISTRATION_DATE, registrationDate));
+        toPrint.append(line2String(EVENT_ID, eventId != null ? eventId.toString() : ""));
         for (Map.Entry<String, Object> entry : attributes.entrySet()) {
             toPrint.append(line2String(entry.getKey(), entry.getValue()));
         }

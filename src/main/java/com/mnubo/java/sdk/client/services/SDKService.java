@@ -16,30 +16,32 @@ package com.mnubo.java.sdk.client.services;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.mnubo.java.sdk.client.config.MnuboSDKConfig;
 
-abstract class AbstractSDKService {
+class SDKService {
 
-    private final RestTemplate template;
+    private RestTemplate template;
     private final CredentialHandler credential;
     private final MnuboSDKConfig config;
 
-    AbstractSDKService(RestTemplate template, CredentialHandler credential, MnuboSDKConfig config) {
+    SDKService(RestTemplate template, CredentialHandler credential, MnuboSDKConfig config) {
         this.credential = credential;
         this.template = template;
         this.config = config;
     }
 
-    protected void postRequest(String url) {
+    void postRequest(String url) {
         // entity
         HttpEntity<?> request = new HttpEntity<Object>(getAutorizationHeader());
 
         template.postForEntity(url, request, String.class);
     }
 
-    protected <T> T postRequest(String url, Class<T> objectClass, Object object) {
+    <T> T postRequest(String url, Class<T> objectClass, Object object) {
         // entity
         HttpEntity<?> request = new HttpEntity<Object>(object, getAutorizationHeader());
 
@@ -48,15 +50,36 @@ abstract class AbstractSDKService {
 
     }
 
-    protected HttpHeaders getAutorizationHeader() {
+    void putRequest(String url, Object object) {
+        // entity
+        HttpEntity<?> request = new HttpEntity<Object>(object, getAutorizationHeader());
+
+        template.put(url, request);
+    }
+
+    void deleteRequest(String url) {
+        // entity
+        HttpEntity<?> request = new HttpEntity<Object>(getAutorizationHeader());
+
+        template.exchange(url, HttpMethod.DELETE, request, String.class);
+    }
+
+    HttpHeaders getAutorizationHeader() {
         // header
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", credential.getAutorizationToken());
         return headers;
     }
 
-    protected MnuboSDKConfig getConfig() {
+    MnuboSDKConfig getConfig() {
         return config;
+    }
+
+    UriComponentsBuilder getBaseUri()
+    {
+        return UriComponentsBuilder.newInstance().host(getConfig().getHostName())
+                                   .port(getConfig().getPlatformPort()).scheme(getConfig().getHttpProtocol())
+                                   .path(getConfig().getHttpBasePath());
     }
 
 }

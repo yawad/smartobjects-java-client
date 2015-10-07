@@ -39,4 +39,20 @@ public interface OwnersSDK {
      */
     void claim(String username, String deviceId);
 
+    /**
+     * Allows update an existing owner.
+     *
+     * @param owner, Owner bean to be updated. note that "username" and "password" fields will be ignored.
+     * @param username, Owner's "username" to be updated.
+     *
+     */
+    void update(Owner owner, String username);
+
+    /**
+     * Allows delete an existing owner.
+     *
+     * @param username, Owner's "username" to be deleted.
+     */
+    void delete(String username);
+
 }

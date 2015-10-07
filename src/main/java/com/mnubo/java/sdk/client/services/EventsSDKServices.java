@@ -19,42 +19,35 @@ import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.mnubo.java.sdk.client.config.MnuboSDKConfig;
 import com.mnubo.java.sdk.client.models.Event;
 import com.mnubo.java.sdk.client.spi.EventsSDK;
 
-class EventsSDKServices extends AbstractSDKService implements EventsSDK {
+class EventsSDKServices implements EventsSDK {
 
-    private final String EVENT_PATH = "/events";
+    private static final String EVENT_PATH = "/events";
+    private final SDKService sdkCommonServices;
 
-    EventsSDKServices(RestTemplate template, CredentialHandler credential, MnuboSDKConfig config) {
-        super(template, credential, config);
+    EventsSDKServices(SDKService sdkCommonServices) {
+        this.sdkCommonServices = sdkCommonServices;
     }
 
     @Override
-    public void send(String objectId, List<Event> events) {
+    public void send(String deviceId, List<Event> events) {
         // url
-        final String url = UriComponentsBuilder.newInstance().host(getConfig().getHostName())
-                .port(getConfig().getPlatformPort()).scheme(getConfig().getHttpProtocol())
-                .path(getConfig().getHttpBasePath() + OBJECT_PATH + "/" + objectId + EVENT_PATH).build().toString();
+        final String url = sdkCommonServices.getBaseUri().path(OBJECT_PATH).pathSegment(deviceId, EVENT_PATH).build().toString();
 
         // posting
-        postRequest(url, Event.class, events);
+        sdkCommonServices.postRequest(url, Event.class, events);
     }
 
     @Override
     public void send(List<Event> events) {
         for (Event event : events) {
-            List<Event> eventsByObjectId = new ArrayList<Event>();
-            eventsByObjectId.add(event);
-            final String url = UriComponentsBuilder.newInstance().host(getConfig().getHostName())
-                    .port(getConfig().getPlatformPort()).scheme(getConfig().getHttpProtocol())
-                    .path(getConfig().getHttpBasePath() + EVENT_PATH).build().toString();
+            List<Event> eventsByDeviceId = new ArrayList<Event>();
+            eventsByDeviceId.add(event);
+            final String url = sdkCommonServices.getBaseUri().path(EVENT_PATH).build().toString();
             // posting
-            postRequest(url, Event.class, eventsByObjectId);
+            sdkCommonServices.postRequest(url, Event.class, eventsByDeviceId);
         }
     }
 }

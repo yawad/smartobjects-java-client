@@ -26,6 +26,7 @@ final class MnuboSDKClientImpl implements MnuboSDKClient {
     private final ObjectsSDK objectCLient;
     private final OwnersSDK ownerCLient;
     private final EventsSDK eventCLient;
+    private final SDKService sdkService;
 
     MnuboSDKClientImpl(MnuboSDKConfig config) {
         // config file
@@ -37,10 +38,13 @@ final class MnuboSDKClientImpl implements MnuboSDKClient {
         // credential handler
         CredentialHandler credentials = new CredentialHandler(config, restTemplate);
 
+        // creating SDK service instance
+        sdkService = new SDKService(restTemplate, credentials, config);
+
         // creating specific clients
-        objectCLient = new ObjectsSDKServices(restTemplate, credentials, config);
-        eventCLient = new EventsSDKServices(restTemplate, credentials, config);
-        ownerCLient = new OwnersSDKServices(restTemplate, credentials, config);
+        objectCLient = new ObjectsSDKServices(sdkService);
+        eventCLient = new EventsSDKServices(sdkService);
+        ownerCLient = new OwnersSDKServices(sdkService);
     }
 
     @Override

@@ -211,6 +211,19 @@ public final class Event {
     }
 
     /**
+     * returns Device Id of the object to post the event. It could be null.
+     *
+     * @return attributes.
+     *
+     */
+    public String getDeviceId() {
+        if (smartObject == null || smartObject.getDeviceId() == null) {
+            return null;
+        }
+        return smartObject.getDeviceId();
+    }
+
+    /**
      * returns Object Id of the object to post the event. It could be null.
      *
      * @return attributes.

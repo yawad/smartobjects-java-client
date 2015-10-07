@@ -16,12 +16,14 @@
  */
 package com.mnubo.java.sdk.client.mapper;
 
+import static com.mnubo.java.sdk.client.models.Owner.EVENT_ID;
 import static com.mnubo.java.sdk.client.models.Owner.PASSWORD;
 import static com.mnubo.java.sdk.client.models.Owner.REGISTRATION_DATE;
 import static com.mnubo.java.sdk.client.models.Owner.USERNAME;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -53,6 +55,9 @@ public class OwnerDeserializer extends StdDeserializer<Owner> {
             }
             else if (entry.getKey().equals(REGISTRATION_DATE)) {
                 builder.withRegistrationDate(DateTime.parse(entry.getValue().toString()));
+            }
+            else if (entry.getKey().equals(EVENT_ID)) {
+                builder.withEventId(UUID.fromString(entry.getValue().toString()));
             }
             else {
                 builder.withAddedAttribute(entry.getKey(), entry.getValue());
