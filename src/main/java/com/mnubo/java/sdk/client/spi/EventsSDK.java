@@ -26,12 +26,12 @@ import com.mnubo.java.sdk.client.models.Event;
 public interface EventsSDK {
 
     /**
-     * Allows post events to an unique object.
+     * Allows post events to an unique object. Note that in this case all Event.
      *
-     * @param ObjectId, device Id to send the events
+     * @param deviceId, device Id to send the events
      * @param events, list the events to be posted.
      */
-    void send(String ObjectId, List<Event> events);
+    void send(String deviceId, List<Event> events);
 
     /**
      * Allows post events to several objects. In this case, the device id is taken

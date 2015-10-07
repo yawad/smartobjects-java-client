@@ -17,6 +17,7 @@
 package com.mnubo.java.sdk.client.mapper;
 
 import static com.mnubo.java.sdk.client.models.SmartObject.DEVICE_ID;
+import static com.mnubo.java.sdk.client.models.SmartObject.EVENT_ID;
 import static com.mnubo.java.sdk.client.models.SmartObject.OBJECT_TYPE;
 import static com.mnubo.java.sdk.client.models.SmartObject.OWNER;
 import static com.mnubo.java.sdk.client.models.SmartObject.REGISTRATION_DATE;
@@ -50,6 +51,9 @@ public class SmartObjectSerializer extends StdSerializer<SmartObject> {
         }
         if (value.getOwner() != null) {
             jgen.writeObjectField(OWNER, value.getOwner());
+        }
+        if (value.getEventId() != null) {
+            jgen.writeObjectField(EVENT_ID, value.getEventId());
         }
         if (value.getAttributes() != null) {
             for (Map.Entry<String, Object> entry : value.getAttributes().entrySet()) {

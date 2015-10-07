@@ -2,7 +2,7 @@
 	{
 		"x_object" :
 		{
-		    "x_device_id" : "sdk-object-with-owner-a01"
+		    "x_device_id" : "sdk-object-a01"
 		},
 		"x_latitude" : 26.05,
 		"x_longitude" : 05.6,
@@ -17,7 +17,7 @@
 	{
         "x_object" :
         {
-            "x_device_id" : "sdk-object-with-owner-a01"
+            "x_device_id" : "sdk-object-a01"
         },
 	    "x_event_type" : "app_config",
 	    "x_latitude" : 26.05,

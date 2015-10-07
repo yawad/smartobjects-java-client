@@ -18,12 +18,14 @@ package com.mnubo.java.sdk.client.mapper;
 
 import static com.mnubo.java.sdk.client.models.Owner.USERNAME;
 import static com.mnubo.java.sdk.client.models.SmartObject.DEVICE_ID;
+import static com.mnubo.java.sdk.client.models.SmartObject.EVENT_ID;
 import static com.mnubo.java.sdk.client.models.SmartObject.OBJECT_TYPE;
 import static com.mnubo.java.sdk.client.models.SmartObject.OWNER;
 import static com.mnubo.java.sdk.client.models.SmartObject.REGISTRATION_DATE;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -63,6 +65,9 @@ public class SmartObjectDeserializer extends StdDeserializer<SmartObject> {
             }
             else if (entry.getKey().equals(REGISTRATION_DATE)) {
                 builder.withRegistrationDate(DateTime.parse(entry.getValue().toString()));
+            }
+            else if (entry.getKey().equals(EVENT_ID)) {
+                builder.withEventId(UUID.fromString(entry.getValue().toString()));
             }
             else {
                 builder.withAddedAttribute(entry.getKey(), entry.getValue());

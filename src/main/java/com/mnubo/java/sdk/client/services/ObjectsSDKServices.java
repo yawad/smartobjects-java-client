@@ -15,29 +15,53 @@
 package com.mnubo.java.sdk.client.services;
 
 import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.mnubo.java.sdk.client.config.MnuboSDKConfig;
 import com.mnubo.java.sdk.client.models.SmartObject;
 import com.mnubo.java.sdk.client.spi.ObjectsSDK;
 
-class ObjectsSDKServices extends AbstractSDKService implements ObjectsSDK {
-    ObjectsSDKServices(RestTemplate template, CredentialHandler credential, MnuboSDKConfig config) {
-        super(template, credential, config);
+class ObjectsSDKServices implements ObjectsSDK {
+
+    private final SDKService sdkCommonServices;
+
+    ObjectsSDKServices(SDKService sdkCommonServices) {
+        this.sdkCommonServices = sdkCommonServices;
     }
 
     @Override
     public void create(SmartObject object) {
         // url
-        final String url = UriComponentsBuilder.newInstance().host(getConfig().getHostName())
-                .port(getConfig().getPlatformPort()).scheme(getConfig().getHttpProtocol())
-                .path(getConfig().getHttpBasePath() + OBJECT_PATH).build().toString();
+        final String url = sdkCommonServices.getBaseUri().path(OBJECT_PATH).build().toString();
+
+        notBlank(object.getObjectType(), "X_Object_Type cannot be blank.");
+        notBlank(object.getDeviceId(), "X_Device_Id cannot be blank.");
 
         // posting
-        postRequest(url, SmartObject.class, object);
+        sdkCommonServices. postRequest(url, SmartObject.class, object);
 
     }
+
+    @Override
+    public void update(SmartObject object, String deviceId) {
+        notBlank(deviceId, "X_Device_Id cannot be blank.");
+
+        // url
+        final String url = sdkCommonServices.getBaseUri().path(OBJECT_PATH).pathSegment(deviceId).build().toString();
+
+        // putting
+        sdkCommonServices.putRequest(url, object);
+    }
+
+    @Override
+    public void delete(String deviceId) {
+        notBlank(deviceId, "X_Device_Id cannot be blank.");
+
+        // url
+        final String url = sdkCommonServices.getBaseUri().path(OBJECT_PATH).pathSegment(deviceId).build().toString();
+
+        // putting
+        sdkCommonServices.deleteRequest(url);
+    }
+
 
 }

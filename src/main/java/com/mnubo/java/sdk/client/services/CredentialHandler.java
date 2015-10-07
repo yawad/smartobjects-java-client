@@ -20,7 +20,7 @@ import static com.mnubo.java.sdk.client.Constants.TOKEN_GRANT_TYPE;
 import static com.mnubo.java.sdk.client.Constants.TOKEN_GRANT_TYPE_VALUE;
 import static com.mnubo.java.sdk.client.Constants.TOKEN_PATH;
 import static com.mnubo.java.sdk.client.Constants.TOKEN_SCOPE;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static org.springframework.util.Base64Utils.encodeToString;
 
 import org.joda.time.DateTime;
@@ -72,9 +72,9 @@ class CredentialHandler {
 
             // send request
             ResponseEntity<Token> response = restTemplate.exchange(url, HttpMethod.POST, request, Token.class);
-            validIsBlank(response.getBody().getAccessToken(),
+            notBlank(response.getBody().getAccessToken(),
                     "Token not valid, check autentication server or credentials");
-            validIsBlank(response.getBody().getTokenType(),
+            notBlank(response.getBody().getTokenType(),
                     "Token not valid, check autentication server or credentials");
             setCredentials(response.getBody());
             setExpireTime(credentials.getExpiresIn());

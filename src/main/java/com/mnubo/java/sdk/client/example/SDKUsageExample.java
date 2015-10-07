@@ -51,13 +51,13 @@ public class SDKUsageExample {
      *
      * This is an example to post event to ONE object.
      *
-     * @param objectId, Object to be posted,
+     * @param deviceId, Object's device id to be posted,
      * @param events, events to be posted in the object. Please check resource
      * eventvalues.json file to get an example about the this object.
      */
-    public void postEvents2Object(String objectId, List<Event> events) {
+    public void postEvents2Object(String deviceId, List<Event> events) {
         // Posting events to only one object
-        mnuboClient.getEventClient().send(objectId, events);
+        mnuboClient.getEventClient().send(deviceId, events);
     }
 
     /**
@@ -85,9 +85,69 @@ public class SDKUsageExample {
 
     /**
      *
+     * This is an example to update an existing owner. Note that "username" and "password" inside of owner
+     * cannot change. Also, an "eventId" can be added to assign a "id" to the request.
+     *
+     * @param owner2Update, Owner to be updated.
+     * @param username, username of the owner to be updated.
+     */
+    public void updateOwner(Owner owner2Update, String username) {
+        // putting an existing owner
+        mnuboClient.getOwnerClient().update(owner2Update, username);
+    }
+
+    /**
+     *
+     * This is an example to update an existing object. All parameters inside Object can be updated.
+     * Also, an "eventId" can be added to assign a "id" to the request.
+     *
+     * @param object2Update, smartObject to be updated.
+     * @param deviceId, device Id of the Object to be updated.
+     */
+    public void updateObject(SmartObject object2Update, String deviceId) {
+        // putting an existing smartobject
+        mnuboClient.getObjectClient().update(object2Update, deviceId);
+    }
+
+    /**
+    *
+    * This is an example to delete an existing owner.
+    *
+    * @param username, username of the owner to be deleted.
+    */
+    public void deleteOwner(String username) {
+        // deleting an existing owner
+        mnuboClient.getOwnerClient().delete(username);
+    }
+
+    /**
+     *
+     * This is an example to delete an existing object.
+     *
+     * @param deviceId, device Id of the Object to be deleted.
+     */
+    public void deleteObject(String deviceId) {
+        // deleting an existing owner
+        mnuboClient.getObjectClient().delete(deviceId);
+    }
+
+    /**
+     *
+     * This is an example to link an existing owner to an existing smartObject
+     *
+     * @param username, username of the claimer owner.
+     * @param deviceId, device Id of the Object reclaimed or to be linked.
+     */
+    public void claimObject(String username, String deviceId) {
+        mnuboClient.getOwnerClient().claim(username, deviceId);
+    }
+
+    /**
+     *
      * This is an example how to build a new owner. Please note that only "username" is a
      * mandatory field, others ones are optional.
      *
+     * @return Owner built.
      */
     public Owner buildingOwner() {
         //@formatter:off
@@ -108,6 +168,7 @@ public class SDKUsageExample {
      * This is an example how to build a new SmartObject. Please note that "deviceId" and
      * "ObjectType" are mandatory fields, others ones are optional.
      *
+     * @return Smartobject built
      */
     public SmartObject buildingSmartObject() {
         //@formatter:off
@@ -130,6 +191,7 @@ public class SDKUsageExample {
      * This is an example how to build a new Event. Please note that "deviceId" and
      * "ObjectType" are mandatory fields, others ones are optional.
      *
+     * @return Event built
      */
     public Event buildingEvent() {
         //@formatter:off

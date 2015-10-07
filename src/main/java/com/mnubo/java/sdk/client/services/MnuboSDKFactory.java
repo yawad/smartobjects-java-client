@@ -29,7 +29,7 @@ import static com.mnubo.java.sdk.client.Constants.HTTP_PROTOCOL;
 import static com.mnubo.java.sdk.client.Constants.PLATFORM_PORT;
 import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_KEY;
 import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_SECRET;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsFile;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
 
@@ -226,9 +226,9 @@ public abstract class MnuboSDKFactory {
      */
     //@formatter:on
     public static MnuboSDKClient getClient(String hostName, String securityConsumerKey, String securityConsumerSecret) {
-        validIsBlank(hostName, "hostname property canno be null.");
-        validIsBlank(securityConsumerKey, "securityConsumerKey property canno be null.");
-        validIsBlank(securityConsumerSecret, "securityConsumerSecret property canno be null.");
+        notBlank(hostName, "hostname property canno be null.");
+        notBlank(securityConsumerKey, "securityConsumerKey property canno be null.");
+        notBlank(securityConsumerSecret, "securityConsumerSecret property canno be null.");
         config.sethostName(hostName);
         config.setSecurityConsumerKey(securityConsumerKey);
         config.setSecurityConsumerSecret(securityConsumerSecret);

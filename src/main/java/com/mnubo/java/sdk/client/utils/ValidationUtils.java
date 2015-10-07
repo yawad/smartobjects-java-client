@@ -1,14 +1,14 @@
 /*
  * ---------------------------------------------------------------------------
- * 
+ *
  * COPYRIGHT (c) 2015 Mnubo Inc. All Rights Reserved.
- * 
+ *
  * The copyright to the computer program(s) herein is the property of Mnubo Inc. The program(s) may be used and/or
  * copied only with the written permission from Mnubo Inc. or in accordance with the terms and conditions stipulated in
  * the agreement/contract under which the program(s) have been supplied.
- * 
+ *
  * Author: marias Date : Aug 11, 2015
- * 
+ *
  * ---------------------------------------------------------------------------
  */
 
@@ -116,7 +116,7 @@ public class ValidationUtils
         return true;
     }
 
-    public static boolean validIsBlank( String object, String message )
+    public static boolean notBlank( String object, String message )
     {
         if ( isBlank( object ) )
         {
@@ -128,6 +128,11 @@ public class ValidationUtils
     public static boolean isBlank( String object )
     {
         return StringUtils.isBlank( object );
+    }
+
+    public static boolean isNotBlank( String object )
+    {
+        return StringUtils.isNotBlank( object );
     }
 
     public static double isValidLatitude( String latitude )

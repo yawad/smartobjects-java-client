@@ -16,7 +16,7 @@ package com.mnubo.java.sdk.client.models;
 
 import static com.mnubo.java.sdk.client.Constants.PRINT_OBJECT_NULL;
 import static com.mnubo.java.sdk.client.models.SmartObject.DEVICE_ID;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsBlank;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static org.joda.time.DateTime.now;
 
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public final class Event {
     private final Map<String, Object> timeseries;
 
     Event(UUID eventId, SmartObject smartObject, String eventType, DateTime timestamp, Map<String, Object> timeseries) {
-        validIsBlank(eventType, "X_Event_Type cannot be null or empty");
+        notBlank(eventType, "X_Event_Type cannot be null or empty");
         this.eventId = eventId;
         this.smartObject = smartObject;
         this.eventType = eventType;
@@ -208,6 +208,19 @@ public final class Event {
      */
     public Map<String, Object> getTimeseries() {
         return new HashMap<String, Object>(timeseries);
+    }
+
+    /**
+     * returns Device Id of the object to post the event. It could be null.
+     *
+     * @return attributes.
+     *
+     */
+    public String getDeviceId() {
+        if (smartObject == null || smartObject.getDeviceId() == null) {
+            return null;
+        }
+        return smartObject.getDeviceId();
     }
 
     /**

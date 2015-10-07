@@ -110,6 +110,85 @@ The JSON file "myOwnerFile.json" is as follows:
 }
 ```
 
+#### Updating Owners
+To update an owner you need to:
+1. Request an OwnersSDK interface using the mnubo client instance.
+2. Build an owner with the parameters to change.
+
+This example describes how to update an Owner:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Owners client interface
+OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
+
+//build the owner, including only the parameters to update. Remember "username" & "password" cannot change
+Owner Owner2Update = Owner.builder()
+                          .withRegistrationDate(DateTime.parse("2015-01-02T00:00:00+04:00"))
+                          .withAddedAttribute("age", 38)
+                          .build();
+
+//update the owner
+mnuboOwnersClient.update( Owner2Update, "john.smith@mycompany.com" );
+```
+
+You can also update an owner using a JSON file:
+
+```
+//get a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Owners client interface
+OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
+
+//read the Owner from the JSON file
+String owner2BePosted = readingFile( "myOwnerFile.json" );
+
+//deserialise the JSON file
+Owner owner2Update = SDKMapperUtils.readValue( owner2BePosted , Owner.class );
+
+//update the owner
+mnuboOwnersClient.update( owner2Update, "john.smith@mycompany.com" );
+```
+
+The JSON file "myOwnerFile.json" is as follows. remember only parameters to change:
+
+```
+{
+  "x_registration_date":"2015-01-02T00:00:00+04:00",
+  "age":38,
+}
+```
+
+#### Delete Owners
+
+This example describes how to delete an Owner:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Owners client interface
+OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
+
+//delete the owner
+mnuboOwnersClient.delete( "john.smith@mycompany.com" );
+```
+
+#### Owner claiming an object
+
+This example describes how to link an Object with an Owner:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Owners client interface
+OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
+
+//claim the object
+mnuboOwnersClient.claim( "john.smith@mycompany.com", "my_device_Id" );
+```
+
 #### Creating SmartObjects
 To create a SmartObject:
 1. Request an ObjectSDK interface from the mnubo client instance.
@@ -122,7 +201,7 @@ MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CO
 //get an Object client interface
 ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
 
-//build the owner
+//build the object
 SmartObject object2Create = SmartObject.builder()
                                        .withDeviceId("connect_alpha.6hv135nw00393.1234567")
                                        .withObjectType("gateway")
@@ -173,6 +252,72 @@ The JSON file "myObjectFile.json" is as follows:
            "username" : "john.smith@mycompany.com"
     }
 }
+```
+
+#### Updating SmartObjects
+To update a SmartObject:
+1. Request an ObjectSDK interface from the mnubo client instance.
+2. Build an object with parameters to change.
+3. Note that an owner cannot be added during update
+
+```
+//get a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Object client interface
+ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
+
+//build the object, only with parameters to change.
+SmartObject object2Update = SmartObject.builder()
+                                       .withDeviceId("connect_beta.6hv135nw00393.1234567")
+                                       .withObjectType("gateway1")
+                                       .withAddedAttribute("site_description", "My connected building")
+                                       .build();
+
+//update the object
+mnuboObjectClient.update( object2Update, "connect_alpha.6hv135nw00393.1234567" );
+```
+
+You can also update an object using a JSON file
+
+```
+//get a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Object client interface
+ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
+
+//read the Object from the JSON file
+String object2BePosted = readingFile( "myObjectFile.json" );
+
+//deserialise the JSON file
+SmartObject object2Update = SDKMapperUtils.readValue( object2BePosted , SmartObject.class );
+
+//update the object
+mnuboObjectClient.update( object2Update, "connect_alpha.6hv135nw00393.1234567" );
+```
+
+The JSON file "myObjectFile.json" is as follows:
+
+```
+{
+    "x_device_id" : "connect_beta.6hv135nw00393.1234567",
+    "x_object_type" : "gateway1",
+    "site_description" : "My connected building",
+}
+```
+
+#### delete SmartObjects
+
+```
+//get a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Object client interface
+ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
+
+//delete the object
+mnuboObjectClient.delete( "connect_alpha.6hv135nw00393.1234567" );
 ```
 
 #### Sending Events
