@@ -7,7 +7,7 @@ Table of Content
 
 [2. Architecture](#section2) 
 
-[3. Pre-requisites](#section3)
+[3. Prerequisites](#section3)
 
 [4. Installation & Configuration](#section4) 
 
@@ -32,7 +32,7 @@ To connect your Java application to our API use the mnubo Java SDK..
 To get a client instance use the "MnuboSDKFactory" Class. Using this class, you will be able to create, update, delete owners/objects as well as send events.
 
 ---
-#<a name="section3"></a>3. Pre-requisites
+#<a name="section3"></a>3. Prerequisites
 
 - Maven
 - Java
