@@ -1,4 +1,22 @@
 # mnubo Java SDK
+
+Table of Content
+================
+ 
+[1. Introduction](#section1)
+2. Architecture 
+3. Pre-requisites
+4. Installation & Configuration
+5. Usage
+6. Important notes
+7. Source code
+8. Known limitations
+9. References
+
+---
+
+# <a name="section1"></a> 1. Introduction
+
 To connect your Java application to our API use the mnubo Java SDK..
 
 ## Getting started
