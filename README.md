@@ -24,7 +24,7 @@ Table of Content
 ---
 #<a name="section1"></a>1. Introduction
 
-To connect your Java application to our API use the mnubo Java SDK..
+To connect your Java application to our API use the mnubo Java SDK.
 
 ---
 #<a name="section3"></a>2. Architecture
