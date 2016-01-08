@@ -1,5 +1,5 @@
 # mnubo Java SDK
-To connect your Java application to our API use the mnubo Java SDK.
+To connect your Java application to our API use the mnubo Java SDK..
 
 ## Getting started
 ---
