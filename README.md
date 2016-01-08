@@ -1,6 +1,5 @@
 # mnubo Java SDK
 
---
 Table of Content
 ================
  
@@ -23,13 +22,24 @@ Table of Content
 [9. References](#section9)
 
 ---
-
 #<a name="section1"></a>1. Introduction
 
 To connect your Java application to our API use the mnubo Java SDK..
 
-## Getting started
 ---
+#<a name="section3"></a>2. Architecture
+
+To get a client instance use the "MnuboSDKFactory" Class. Using this class, you will be able to create, update, delete owners/objects as well as send events.
+
+---
+#<a name="section3"></a>3. Pre-requisites
+
+- Maven
+- Java
+
+---
+#<a name="section4"></a>4. Installation & Configuration
+
 Include the mnubo client in your Java application using:
 
 ### Maven
@@ -45,15 +55,15 @@ Add the following into your pom.xml:
 ### Download source code
 Download the source code and include it in your Java Application project.
 
-## Usage
----
-
 ### Configuration
 The following parameters must be configured before using the mnubo client:
 
     - **hostname**.- mnubo's server name, for example: ```rest.sandbox.mnubo.com```.
     - **consumer-key**.- Your unique client identity which is provided by mnubo.
     - **consumer-secret**.- Your secret key which is used in conjunction with the consumer key to access the mnubo server. This key is provided by mnubo.
+
+---
+#<a name="section5"></a>5. Usage
 
 ### Getting a "MnuboSDKClient" (client) instance
 To get a client instance use the **"MnuboSDKFactory" Class**. Note that you only need one client instance. We provide multithreading support and a pool of connection.
@@ -539,3 +549,25 @@ The JSON file "myEvents.json" is as follows:
     }
 ]
 ```
+
+---
+#<a name="section6"></a>6. Important notes
+
+N/A
+
+---
+#<a name="section7"></a>7. Source code
+
+https://github.com/mnubo/mnubo-java-sdk/tree/master/src/main
+
+---
+#<a name="section8"></a>8. Known limitations
+
+N/A
+
+---
+#<a name="section9"></a>9. References
+
+http://www.oracle.com/technetwork/java/index.html
+https://maven.apache.org/
+
