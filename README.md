@@ -1,17 +1,26 @@
 # mnubo Java SDK
 
+--
 Table of Content
 ================
  
 [1. Introduction](#section1)
-2. Architecture 
-3. Pre-requisites
-4. Installation & Configuration
-5. Usage
-6. Important notes
-7. Source code
-8. Known limitations
-9. References
+
+[2. Architecture](#section2) 
+
+[3. Pre-requisites](#section3)
+
+[4. Installation & Configuration](#section4) 
+
+[5. Usage](#section5)
+
+[6. Important notes](#section6) 
+
+[7. Source code](#section7)
+
+[8. Known limitations](#section8)
+
+[9. References](#section9)
 
 ---
 
