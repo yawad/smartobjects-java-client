@@ -34,7 +34,7 @@
 
     <properties>
         <java.version>1.7</java.version>
-        <jackson.version>2.4.6</jackson.version>
+        <jackson.version>2.6.0</jackson.version>
         <joda-time.version>2.5</joda-time.version>
         <commons.lang3.version>3.3.2</commons.lang3.version>
         <spring.version>4.1.7.RELEASE</spring.version>
@@ -90,6 +90,16 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+   			<version>${jackson.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
