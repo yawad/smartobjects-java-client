@@ -49,7 +49,7 @@ Add the following into your pom.xml:
     <groupId>com.mnubo</groupId>
     <artifactId>java-sdk-client</artifactId>
     <scope>compile</scope>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 </dependency>
 ```
 ### Download source code

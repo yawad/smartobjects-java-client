@@ -6,7 +6,7 @@
     <groupId>com.mnubo</groupId>
     <artifactId>java-sdk-client</artifactId>
     <description>Contains Mnubo java SDK client.</description>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>http://www.mnubo.com</url>
 
