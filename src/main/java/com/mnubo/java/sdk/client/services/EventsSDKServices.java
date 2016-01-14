@@ -42,12 +42,7 @@ class EventsSDKServices implements EventsSDK {
 
     @Override
     public void send(List<Event> events) {
-        for (Event event : events) {
-            List<Event> eventsByDeviceId = new ArrayList<Event>();
-            eventsByDeviceId.add(event);
-            final String url = sdkCommonServices.getBaseUri().path(EVENT_PATH).build().toString();
-            // posting
-            sdkCommonServices.postRequest(url, Event.class, eventsByDeviceId);
-        }
+    	final String url = sdkCommonServices.getBaseUri().path(EVENT_PATH).build().toString();
+    	sdkCommonServices.postRequest(url, Event.class, events);
     }
 }
