@@ -3,6 +3,7 @@ package com.mnubo.java.sdk.client.mapper;
 import com.mnubo.java.sdk.client.models.Event;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,9 +38,9 @@ public class EventSerializerTest extends AbstractSerializerTest {
                 .build();
 
         String json = mapper.writeValueAsString(event);
-        assertThat(json, equalTo(format(
+        JSONAssert.assertEquals(format(
                 "{\"x_timestamp\":\"%s\",\"x_object\":{\"x_device_id\":\"device\"},\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_event_type\":\"type\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
-                formatDate(event.getTimestamp()))));
+                formatDate(event.getTimestamp())), json, true);
     }
 
     @Test
@@ -54,9 +55,9 @@ public class EventSerializerTest extends AbstractSerializerTest {
                 .build();
 
         String json = mapper.writeValueAsString(event);
-        assertThat(json, equalTo(format(
+        JSONAssert.assertEquals(format(
                 "{\"x_timestamp\":\"%s\",\"x_event_type\":\"type\",\"list\":[\"1\",\"2\"]}",
-                formatDate(event.getTimestamp()))));
+                formatDate(event.getTimestamp())), json, true);
     }
 
     @Test
@@ -68,9 +69,9 @@ public class EventSerializerTest extends AbstractSerializerTest {
                 .build();
 
         String json = mapper.writeValueAsString(event);
-        assertThat(json, equalTo(format(
+        JSONAssert.assertEquals(format(
                 "{\"x_timestamp\":\"%s\",\"x_object\":{\"x_device_id\":\"deviceId\"},\"x_event_type\":\"type\"}",
-                formatDate(event.getTimestamp()))));
+                formatDate(event.getTimestamp())), json, true);
     }
 
     @Test
@@ -86,6 +87,8 @@ public class EventSerializerTest extends AbstractSerializerTest {
         Event event = Event.builder().withEventType("type").withTimestamp(null).build();
 
         String json = mapper.writeValueAsString(event);
-        assertThat(json, equalTo(format("{\"x_timestamp\":\"%s\",\"x_event_type\":\"type\"}", event.getTimestamp())));
+        JSONAssert.assertEquals(
+                format("{\"x_timestamp\":\"%s\",\"x_event_type\":\"type\"}", event.getTimestamp()),
+                json, true);
     }
 }

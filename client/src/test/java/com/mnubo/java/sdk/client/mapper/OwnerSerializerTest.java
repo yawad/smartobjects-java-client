@@ -3,6 +3,7 @@ package com.mnubo.java.sdk.client.mapper;
 import com.mnubo.java.sdk.client.models.Owner;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,9 +38,9 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
                 .build();
 
         String json = mapper.writeValueAsString(owner);
-        assertThat(json, equalTo(format(
+        JSONAssert.assertEquals(format(
                 "{\"x_registration_date\":\"%s\",\"x_password\":\"password\",\"username\":\"username\",\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
-                formatDate(now))));
+                formatDate(now)), json, true);
     }
 
     @Test
@@ -53,7 +54,7 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
                 .build();
 
         String json = mapper.writeValueAsString(event);
-        assertThat(json, equalTo("{\"list\":[\"1\",\"2\"]}"));
+        JSONAssert.assertEquals("{\"list\":[\"1\",\"2\"]}", json, true);
     }
 
     @Test
@@ -65,8 +66,8 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
                 .build();
 
         String json = mapper.writeValueAsString(owner);
-        assertThat(json,equalTo(
-                "{\"x_password\":\"password\",\"username\":\"username\"}"));
+        JSONAssert.assertEquals(
+                "{\"x_password\":\"password\",\"username\":\"username\"}", json, true);
     }
 
     @Test
