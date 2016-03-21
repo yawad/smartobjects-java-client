@@ -5,14 +5,13 @@
     <packaging>jar</packaging>
     <artifactId>java-sdk-client</artifactId>
     <description>Contains Mnubo java SDK client.</description>
-    <version>${java-sdk-client.version}</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>http://www.mnubo.com</url>
 
     <parent>
         <groupId>com.mnubo</groupId>
         <artifactId>java-sdk</artifactId>
-        <version>1.0</version>
+        <version>1.6</version>
     </parent>
 
     <developers>
