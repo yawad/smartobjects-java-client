@@ -23,7 +23,7 @@
             <dependency>
                 <groupId>com.mnubo</groupId>
                 <artifactId>java-sdk-client</artifactId>
-                <version>[1.5.0,)</version>
+                <version>${java-sdk-client.version}</version>
             </dependency>
 
             <dependency>
