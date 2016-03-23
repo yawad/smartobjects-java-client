@@ -3,5 +3,5 @@
 /java-sdk-client-example.iml
 /java-sdk.iml
 /.project
-
-
+/target/
+/java-sdk-client.iml

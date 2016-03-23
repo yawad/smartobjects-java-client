@@ -1,4 +1,4 @@
-package com.mnubo.java.sdk.client.integration;
+package integration;
 
 import com.mnubo.java.sdk.client.models.Event;
 import com.mnubo.java.sdk.client.models.Owner;
