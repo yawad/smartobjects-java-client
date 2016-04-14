@@ -34,6 +34,7 @@ public class Convert {
                 primitiveType = "STRING";
                 break;
             case "LONG":
+            case "DURATION":
                 primitiveType = "LONG";
                 break;
             case "ACCELERATION":
