@@ -31,4 +31,11 @@ public interface EventsSDK {
      * message.
      */
     List<Result> send(List<Event> events);
+
+    /**
+     * @see EventsSDK#send(List)
+     * @param events
+     * @return
+     */
+    List<Result> send(Event... events);
 }

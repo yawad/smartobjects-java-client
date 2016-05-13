@@ -200,11 +200,12 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
     }
 
     @Test
-    public void createUpdateNullThenFail() {
+    public void createUpdateWithVarargThenOk() {
+        SmartObject smartObject = SmartObject.builder().withObjectType("type").withDeviceId("device1").build();
 
-        expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("List of smart objects body cannot be null.");
-        objectClient.createUpdate(null);
+        List<Result> results = objectClient.createUpdate(smartObject);
+
+        validateResult(results);
     }
 
     private void validateResult(List<Result> results) {

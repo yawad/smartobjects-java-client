@@ -2,6 +2,7 @@ package com.mnubo.java.sdk.client.services;
 
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
+import static java.util.Arrays.*;
 
 import java.util.List;
 
@@ -78,5 +79,10 @@ class OwnersSDKServices implements OwnersSDK {
                                             .build().toString();
 
         return sdkCommonServices.putRequest(url, owners, List.class);
+    }
+
+    @Override
+    public List<Result> createUpdate(Owner... owners) {
+        return createUpdate(asList(owners));
     }
 }

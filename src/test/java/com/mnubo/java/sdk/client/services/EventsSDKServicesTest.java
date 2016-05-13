@@ -56,13 +56,13 @@ public class EventsSDKServicesTest extends AbstractServiceTest {
         validateResult(results);
     }
 
-
     @Test
-    public void postListEventListNullThenFail() {
+    public void postVarargEventThenOk() {
+        Event event = Event.builder().withEventType("test_type").build();
 
-        expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("Event list cannot be null or empty.");
-        objectClient.send(null);
+        List<Result> results = objectClient.send(event);
+
+        validateResult(results);
     }
 
     @Test

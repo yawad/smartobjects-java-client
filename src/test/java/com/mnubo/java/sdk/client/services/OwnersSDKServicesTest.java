@@ -240,12 +240,14 @@ public class OwnersSDKServicesTest extends AbstractServiceTest {
     }
 
     @Test
-    public void createUpdateNullThenFail() {
+    public void createUpdateWithVarargThenOk() {
+        Owner owner = Owner.builder().withUsername("user1").build();
 
-        expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("List of owners body cannot be null.");
-        ownerClient.createUpdate(null);
+        List<Result> results = ownerClient.createUpdate(owner);
+
+        validateResult(results);
     }
+
 
     private void validateResult(List<Result> results) {
         assertThat(results.size(), equalTo(4));
