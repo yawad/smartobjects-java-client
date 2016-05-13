@@ -3,6 +3,7 @@ package com.mnubo.java.sdk.client.services;
 import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.notNullNorEmpty;
+import static java.util.Arrays.*;
 
 import java.util.List;
 
@@ -36,6 +37,8 @@ class EventsSDKServices implements EventsSDK {
         return sdkCommonServices.postRequest(url, List.class, events);
     }
 
+
+
     @Override
     public List<Result> send(List<Event> events) {
 
@@ -47,5 +50,11 @@ class EventsSDKServices implements EventsSDK {
                                             .build().toString();
 
         return sdkCommonServices.postRequest(url, List.class, events);
+    }
+
+    @Override
+    public List<Result> send(Event... events) {
+
+        return send(asList(events));
     }
 }

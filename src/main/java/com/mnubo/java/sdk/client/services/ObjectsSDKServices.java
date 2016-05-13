@@ -3,6 +3,7 @@ package com.mnubo.java.sdk.client.services;
 import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
+import static java.util.Arrays.*;
 
 import java.util.List;
 
@@ -66,4 +67,10 @@ class ObjectsSDKServices implements ObjectsSDK {
 
         return sdkCommonServices.putRequest(url, objects, List.class);
     }
+
+    @Override
+    public List<Result> createUpdate(SmartObject... objects) {
+        return createUpdate(asList(objects));
+    }
+
 }

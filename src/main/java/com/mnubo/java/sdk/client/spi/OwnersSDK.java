@@ -51,4 +51,11 @@ public interface OwnersSDK {
      * message.
      */
     List<Result> createUpdate(List<Owner> owners);
+
+    /**
+     * @see OwnersSDK#createUpdate(List)
+     * @param owners
+     * @return
+     */
+    List<Result> createUpdate(Owner... owners);
 }
