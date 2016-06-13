@@ -4,6 +4,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.MapperFeature.DEFAULT_VIEW_INCLUSION;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.joda.time.Interval;
 import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 
