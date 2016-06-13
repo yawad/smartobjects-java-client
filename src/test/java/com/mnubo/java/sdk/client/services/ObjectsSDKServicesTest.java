@@ -34,10 +34,10 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
         objectClient = getClient().getObjectClient();
 
         List<Result> resultsMockSetup = new ArrayList<>();
-        resultsMockSetup.add(new Result("idObjectTest1", ResultStates.success, ""));
-        resultsMockSetup.add(new Result("idObjectResult2", ResultStates.error, "Invalid attribute X for the Object"));
-        resultsMockSetup.add(new Result("idObjectTest3", ResultStates.success, ""));
-        resultsMockSetup.add(new Result("idObjectTest4", ResultStates.error, "Error Y"));
+        resultsMockSetup.add(new Result("idObjectTest1", ResultStates.success, "", false));
+        resultsMockSetup.add(new Result("idObjectResult2", ResultStates.error, "Invalid attribute X for the Object", false));
+        resultsMockSetup.add(new Result("idObjectTest3", ResultStates.success, "", false));
+        resultsMockSetup.add(new Result("idObjectTest4", ResultStates.error, "Error Y", false));
 
         // Mock Call PUT Objects
         when(httpResponse.getBody()).thenReturn(resultsMockSetup);
