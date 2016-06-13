@@ -31,6 +31,4 @@ public class SearchResultDeserializerTest extends AbstractSerializerTest {
 
         assertThat(result, equalTo(expected));
     }
-
-
 }

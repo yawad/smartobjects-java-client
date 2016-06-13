@@ -2,10 +2,16 @@ package com.mnubo.java.sdk.client.models.result;
 
 import static com.mnubo.java.sdk.client.Constants.PRINT_OBJECT_NULL;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Result {
+public final class Result {
 
+    /**
+     * Result states values
+     */
     public enum ResultStates {
 
         success("success"), 
@@ -27,65 +33,63 @@ public class Result {
         }
     }
 
+    /**
+     * Constant key used during the deserialization and serialization of json files.
+     */
     public static final String ID = "id";
+
+    /**
+     * Constant key used during the deserialization and serialization of json files.
+     */
     public static final String RESULT = "result";
+
+    /**
+     * Constant key used during the deserialization and serialization of json files.
+     */
     public static final String MESSAGE = "message";
 
-    private String id;
-    private ResultStates result;
-    private String message;
+    /**
+     * Constant key used during the deserialization and serialization of json files.
+     */
+    public static final String OBJECT_EXISTS = "objectExists";
 
-    public Result(String id, ResultStates result, String message) {
+    private final String id;
+    private final ResultStates result;
+    private final String message;
+    private final boolean objectExists;
+
+    /**
+     * Constructor
+     * @param id Result's ID
+     * @param result result, Success or error
+     * @param message message
+     * @param objectExists is exists
+     */
+    @JsonCreator
+    public Result(@JsonProperty(ID) String id,
+                  @JsonProperty(RESULT) ResultStates result,
+                  @JsonProperty(MESSAGE) String message,
+                  @JsonProperty(OBJECT_EXISTS) boolean objectExists) {
         this.id = id;
         this.result = result;
         this.message = message;
+        this.objectExists = objectExists;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public ResultStates getResult() {
         return result;
-    }
-
-    public void setResult(ResultStates result) {
-        this.result = result;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    @JsonIgnore
-    public void setResultSuccess() {
-        this.result = ResultStates.success;
-    }
-
-    @JsonIgnore
-    public void setResultSuccess(String id) {
-        this.id = id;
-        this.result = ResultStates.success;
-    }
-
-    @JsonIgnore
-    public void setResultError(String id, String message) {
-        this.id = id;
-        this.result = ResultStates.error;
-        this.message = message;
-    }
-    @JsonIgnore
-    public void setResultError(String message) {
-        this.result = ResultStates.error;
-        this.message = message;
+    public boolean isObjectExists() {
+        return objectExists;
     }
 
     @Override
