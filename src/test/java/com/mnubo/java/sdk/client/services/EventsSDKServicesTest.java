@@ -29,14 +29,15 @@ public class EventsSDKServicesTest extends AbstractServiceTest {
     public void eventSetup() {
         objectClient = getClient().getEventClient();
 
-        List<Result> resultsMockSetup = new ArrayList<>();
-        resultsMockSetup.add(new Result("idEventTest1", ResultStates.success, "", false));
-        resultsMockSetup.add(new Result("idEventResult2", ResultStates.error, "Object for the Event doesn't exist", false));
-        resultsMockSetup.add(new Result("idEventTest3", ResultStates.error, "Other error for test", false));
-        resultsMockSetup.add(new Result("idEventTest4", ResultStates.success, "", false));
+        Result[] resultsMockSetup = {
+                new Result("idEventTest1", ResultStates.success, "", false),
+                new Result("idEventResult2", ResultStates.error, "Object for the Event doesn't exist", false),
+                new Result("idEventTest3", ResultStates.error, "Other error for test", false),
+                new Result("idEventTest4", ResultStates.success, "", false)
+        };
 
         // Mock Call to POST Events
-        when(restTemplate.postForObject(any(String.class), any(Object.class), eq(List.class)))
+        when(restTemplate.postForObject(any(String.class), any(Object.class), eq(Result[].class)))
                          .thenReturn(resultsMockSetup);
     }
 

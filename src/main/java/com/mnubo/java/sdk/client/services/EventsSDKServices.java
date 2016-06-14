@@ -5,8 +5,9 @@ import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.notNullNorEmpty;
 import static java.util.Arrays.*;
 
-import java.util.List;
+import java.util.*;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.mnubo.java.sdk.client.models.Event;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.EventsSDK;
@@ -34,7 +35,7 @@ class EventsSDKServices implements EventsSDK {
                                             .queryParam(REPORT_RESULTS_QUERY_PARAM, true)
                                             .build().toString();
 
-        return sdkCommonServices.postRequest(url, List.class, events);
+        return postRequest(url, events);
     }
 
 
@@ -49,12 +50,17 @@ class EventsSDKServices implements EventsSDK {
                                             .queryParam(REPORT_RESULTS_QUERY_PARAM, true)
                                             .build().toString();
 
-        return sdkCommonServices.postRequest(url, List.class, events);
+        return postRequest(url, events);
     }
 
     @Override
     public List<Result> send(Event... events) {
 
         return send(asList(events));
+    }
+
+    private List<Result> postRequest(String url, Object object) {
+        Result[] results = sdkCommonServices.postRequest(url, Result[].class, object);
+        return results == null ? new ArrayList<Result>() : Arrays.asList(results);
     }
 }
