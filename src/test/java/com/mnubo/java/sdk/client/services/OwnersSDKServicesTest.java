@@ -34,15 +34,16 @@ public class OwnersSDKServicesTest extends AbstractServiceTest {
     public void ownerSetup() {
         ownerClient = getClient().getOwnerClient();
 
-        List<Result> resultsMockSetup = new ArrayList<>();
-        resultsMockSetup.add(new Result("idOwnerTest1", ResultStates.success, "", false));
-        resultsMockSetup.add(new Result("idOwnerTest2", ResultStates.error, "Invalid attribute X for the Owner", false));
-        resultsMockSetup.add(new Result("idOwnerTest3", ResultStates.error, "Error Z", false));
-        resultsMockSetup.add(new Result("idOwnerResult4", ResultStates.success, "", false));
+        Result[] resultsMockSetup = {
+                new Result("idOwnerTest1", ResultStates.success, "", false),
+                new Result("idOwnerTest2", ResultStates.error, "Invalid attribute X for the Owner", false),
+                new Result("idOwnerTest3", ResultStates.error, "Error Z", false),
+                new Result("idOwnerResult4", ResultStates.success, "", false)
+        };
 
         // Mock Call PUT Owners
         when(httpResponse.getBody()).thenReturn(resultsMockSetup);
-        when(restTemplate.exchange(any(String.class), eq(HttpMethod.PUT), any(HttpEntity.class), eq(List.class)))
+        when(restTemplate.exchange(any(String.class), eq(HttpMethod.PUT), any(HttpEntity.class), eq(Result[].class)))
                          .thenReturn(httpResponse);
     }
 
