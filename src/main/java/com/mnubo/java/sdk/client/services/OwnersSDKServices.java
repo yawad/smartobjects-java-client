@@ -4,7 +4,7 @@ import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
 import static java.util.Arrays.*;
 
-import java.util.List;
+import java.util.*;
 
 import com.mnubo.java.sdk.client.models.Owner;
 import com.mnubo.java.sdk.client.models.result.Result;
@@ -78,7 +78,8 @@ class OwnersSDKServices implements OwnersSDK {
                                             .path(OWNER_PATH)
                                             .build().toString();
 
-        return sdkCommonServices.putRequest(url, owners, List.class);
+        Result[] results = sdkCommonServices.putRequest(url, owners, Result[].class);
+        return results == null ? new ArrayList<Result>() : Arrays.asList(results);
     }
 
     @Override
