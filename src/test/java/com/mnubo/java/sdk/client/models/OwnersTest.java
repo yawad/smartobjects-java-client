@@ -19,20 +19,17 @@ public class OwnersTest {
     public void builder() {
 
         DateTime now = DateTime.now();
-        UUID eventId = UUID.randomUUID();
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("String", "text");
 
         Owner owner = Owner
                 .builder()
-                .withEventId(eventId)
                 .withPassword("password")
                 .withRegistrationDate(now)
                 .withAttributes(attributes)
                 .withUsername("username")
                 .build();
 
-        assertThat(owner.getEventId(), is(equalTo(eventId)));
         assertTrue(owner.getPassword().equals("password"));
         assertTrue(owner.getUsername().equals("username"));
         assertThat(owner.getRegistrationDate(), is(equalTo(now.withZone(DateTimeZone.UTC))));
@@ -63,7 +60,6 @@ public class OwnersTest {
                 .withAddedAttribute("boolean", true)
                 .build();
 
-        assertTrue(owner.getEventId() == null);
         assertTrue(owner.getPassword() == null);
         assertTrue(owner.getUsername() == null);
         assertTrue(owner.getRegistrationDate() == null);

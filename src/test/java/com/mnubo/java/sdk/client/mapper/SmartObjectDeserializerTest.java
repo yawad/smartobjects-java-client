@@ -24,13 +24,12 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
         DateTime now = DateTime.now();
 
         String json = String.format(
-                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_registration_date\":\"%s\",\"x_owner\":{\"username\":\"owner\"}}",
+                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"x_registration_date\":\"%s\",\"x_owner\":{\"username\":\"owner\"}}",
                 now);
 
         SmartObject object = mapper.readValue(json, SmartObject.class);
 
         assertThat(object.getDeviceId(), equalTo("test"));
-        assertTrue(object.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(object.getObjectType().equals("type"));
         assertTrue(object.getOwnerUserName().equals("owner"));
         assertTrue(object.getObjectId() == null);
@@ -70,13 +69,12 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
         DateTime now = DateTime.now();
 
         String json = String.format(
-                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_registration_date\":\"%s\",\"x_owner\":null}",
+                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"x_registration_date\":\"%s\",\"x_owner\":null}",
                 now);
 
         SmartObject object = mapper.readValue(json, SmartObject.class);
 
         assertThat(object.getDeviceId(), equalTo("test"));
-        assertTrue(object.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(object.getObjectType().equals("type"));
         assertTrue(object.getOwnerUserName() == null);
         assertTrue(object.getObjectId() == null);
@@ -146,15 +144,6 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_owner' value 'owner' does not match TYPE 'SMARTOBJECT'");
-        mapper.readValue(json, SmartObject.class);
-    }
-
-    @Test
-    public void testDeserializeWrongEventIdType() throws Exception {
-        String json = "{\"x_device_id\":\"test\",\"event_id\":\"54545c5454-054-54\",\"string\":\"stringValue\"}";
-
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("UUID has to be represented by the standard 36-char representation");
         mapper.readValue(json, SmartObject.class);
     }
 
@@ -236,15 +225,6 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
                 }
             }
         }
-    }
-
-    @Test
-    public void testDeserializeEventIdWordAttributeReserved() throws Exception {
-        String json = "{\"event_ID\":\"46aabccd-4442-6665-a1f0-49889330eaf3\"}";
-
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Reserved field event_id must be lowercase.");
-        mapper.readValue(json, SmartObject.class);
     }
 
     @Test

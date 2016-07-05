@@ -29,7 +29,6 @@ public class SmartObjectSerializerTest extends AbstractSerializerTest {
 
         SmartObject object = SmartObject
                 .builder()
-                .withEventId(UUID.fromString("98c62f5c-ad48-4ef8-8d70-dbe3a1e8b17f"))
                 .withDeviceId("test")
                 .withRegistrationDate(now)
                 .withObjectType("type")
@@ -38,19 +37,22 @@ public class SmartObjectSerializerTest extends AbstractSerializerTest {
 
         String json = mapper.writeValueAsString(object);
         JSONAssert.assertEquals(format(
-                "{\"x_registration_date\":\"%s\",\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"event_id\":\"98c62f5c-ad48-4ef8-8d70-dbe3a1e8b17f\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
+                "{\"x_registration_date\":\"%s\",\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
                 formatDate(now)), json, true);
     }
 
     @Test
     public void testSerializeWithOwner() throws Exception {
 
-        SmartObject object = SmartObject.builder().withEventId(UUID.fromString("671c8315-952b-4c69-8c37-d2d58a64af9e"))
-                .withDeviceId("test").withOwner("owner").build();
+        SmartObject object = SmartObject
+                .builder()
+                .withDeviceId("test")
+                .withOwner("owner")
+                .build();
 
         String json = mapper.writeValueAsString(object);
         JSONAssert.assertEquals(
-                "{\"x_device_id\":\"test\",\"x_owner\":{\"username\":\"owner\"},\"event_id\":\"671c8315-952b-4c69-8c37-d2d58a64af9e\"}",
+                "{\"x_device_id\":\"test\",\"x_owner\":{\"username\":\"owner\"}}",
                 json, true);
     }
 

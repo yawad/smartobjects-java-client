@@ -25,7 +25,6 @@ public class SmartObjectTest {
 
         SmartObject object = SmartObject
                 .builder()
-                .withEventId(eventId)
                 .withObjectType("type")
                 .withRegistrationDate(now)
                 .withAttributes(attributes)
@@ -33,7 +32,6 @@ public class SmartObjectTest {
                 .withOwner("owner")
                 .build();
 
-        assertThat(object.getEventId(), is(equalTo(eventId)));
         assertTrue(object.getObjectType().equals("type"));
         assertTrue(object.getDeviceId().equals("deviceId"));
         assertThat(object.getRegistrationDate(), is(equalTo(now.withZone(DateTimeZone.UTC))));
@@ -45,7 +43,6 @@ public class SmartObjectTest {
         assertTrue(object.getOwner().getPassword() == null);
         assertTrue(object.getOwner().getRegistrationDate() == null);
         assertTrue(object.getOwner().getAttributes().size() == 0);
-        assertTrue(object.getOwner().getEventId() == null);
     }
 
     @Test
@@ -70,7 +67,6 @@ public class SmartObjectTest {
                 .withAddedAttribute("boolean", true)
                 .build();
 
-        assertTrue(object.getEventId() == null);
         assertTrue(object.getDeviceId() == null);
         assertTrue(object.getOwnerUserName() == null);
         assertTrue(object.getOwner() == null);

@@ -28,7 +28,6 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
 
         Owner owner = Owner
                 .builder()
-                .withEventId(UUID.fromString("9ab392d8-a865-48da-9035-0dc0a728b454"))
                 .withUsername("username")
                 .withAttributes(attributes)
                 .withPassword("password")
@@ -37,7 +36,7 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
 
         String json = mapper.writeValueAsString(owner);
         JSONAssert.assertEquals(format(
-                "{\"x_registration_date\":\"%s\",\"x_password\":\"password\",\"username\":\"username\",\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
+                "{\"x_registration_date\":\"%s\",\"x_password\":\"password\",\"username\":\"username\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
                 formatDate(now)), json, true);
     }
 

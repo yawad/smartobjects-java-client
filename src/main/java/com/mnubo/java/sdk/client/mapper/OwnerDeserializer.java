@@ -1,7 +1,6 @@
 package com.mnubo.java.sdk.client.mapper;
 
 import static com.mnubo.java.sdk.client.mapper.MapperUtils.*;
-import static com.mnubo.java.sdk.client.models.Owner.EVENT_ID;
 import static com.mnubo.java.sdk.client.models.Owner.PASSWORD;
 import static com.mnubo.java.sdk.client.models.Owner.REGISTRATION_DATE;
 import static com.mnubo.java.sdk.client.models.Owner.USERNAME;
@@ -44,15 +43,10 @@ public class OwnerDeserializer extends StdDeserializer<Owner> {
                 throwIfNotProperType(REGISTRATION_DATE, fieldValue, DATETIME_TYPE);
                 builder.withRegistrationDate(MapperUtils.convertToDatetime(fieldValue.toString()));
             }
-            else if (fieldName.equals(EVENT_ID)) {
-
-                throwIfNotProperType(EVENT_ID, fieldValue, UUID_TYPE);
-                builder.withEventId(convertToUUID(fieldValue.toString()));
-            }
             else {
 
                 if (fieldName.toLowerCase().equals(USERNAME) || fieldName.toLowerCase().equals(PASSWORD) ||
-                        fieldName.toLowerCase().equals(REGISTRATION_DATE) || fieldName.toLowerCase().equals(EVENT_ID)) {
+                        fieldName.toLowerCase().equals(REGISTRATION_DATE)) {
                     throw new IllegalArgumentException(format("Reserved field %s must be lowercase.",
                             fieldName.toLowerCase()));
                 }

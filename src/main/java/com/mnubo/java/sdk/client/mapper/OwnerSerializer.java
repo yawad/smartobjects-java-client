@@ -1,6 +1,5 @@
 package com.mnubo.java.sdk.client.mapper;
 
-import static com.mnubo.java.sdk.client.models.Owner.EVENT_ID;
 import static com.mnubo.java.sdk.client.models.Owner.PASSWORD;
 import static com.mnubo.java.sdk.client.models.Owner.REGISTRATION_DATE;
 import static com.mnubo.java.sdk.client.models.Owner.USERNAME;
@@ -28,9 +27,6 @@ public class OwnerSerializer extends StdSerializer<Owner> {
         }
         if (value.getUsername() != null) {
             jgen.writeObjectField(USERNAME, value.getUsername());
-        }
-        if (value.getEventId() != null) {
-            jgen.writeObjectField(EVENT_ID, value.getEventId());
         }
         if (value.getAttributes() != null) {
             for (Map.Entry<String, Object> entry : value.getAttributes().entrySet()) {

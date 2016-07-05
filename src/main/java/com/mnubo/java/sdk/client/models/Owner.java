@@ -6,7 +6,6 @@ import static org.joda.time.DateTimeZone.UTC;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -34,19 +33,12 @@ public final class Owner {
      */
     public static final String USERNAME = "username";
 
-    /**
-     * {@value #EVENT_ID} Constant key used during the deserialization and serialization
-     * of json files.
-     */
-    public static final String EVENT_ID = "event_id";
-
     private final String username;
     private final String password;
     private final DateTime registrationDate;
     private final Map<String, Object> attributes;
-    private final UUID eventId;
 
-    Owner(String username, String password, DateTime registrationDate, Map<String, Object> attributes, UUID eventId) {
+    Owner(String username, String password, DateTime registrationDate, Map<String, Object> attributes) {
         if(username != null) {
             this.username = username.toLowerCase();
         } else {
@@ -58,7 +50,6 @@ public final class Owner {
         } else {
             this.registrationDate = registrationDate.withZone(UTC);
         }
-        this.eventId = eventId;
         this.attributes = new HashMap<String, Object>();
         if (attributes != null) {
             for(Map.Entry<String,Object> entry : attributes.entrySet()) {
@@ -96,7 +87,6 @@ public final class Owner {
         private String password;
         private DateTime registrationDate;
         private Map<String, Object> attributes = new HashMap<String, Object>();
-        private UUID eventId;
 
         OwnerBuilder() {
 
@@ -170,26 +160,13 @@ public final class Owner {
         }
 
         /**
-         * Add an event Id to the request.
-         *
-         * @param eventId: event Id.
-         * @return OwnerBuilder: current Owner builder.
-         *
-         */
-        public OwnerBuilder withEventId(UUID eventId)
-        {
-            this.eventId = eventId;
-            return this;
-        }
-
-        /**
          * Build the immutable Owner instance with the parameters set. Note that username
          * parameter is mandatory.
          *
          * @return Owner: immutable Owner instance built
          */
         public Owner build() {
-            return new Owner(username, password, registrationDate, attributes, eventId);
+            return new Owner(username, password, registrationDate, attributes);
         }
 
     }
@@ -235,16 +212,6 @@ public final class Owner {
         return registrationDate;
     }
 
-    /**
-     * returns the event id associate to each request.
-     *
-     * @return event id.
-     *
-     */
-    public UUID getEventId() {
-        return eventId;
-    }
-
     @Override
     public String toString() {
         StringBuilder toPrint = new StringBuilder();
@@ -252,7 +219,6 @@ public final class Owner {
         toPrint.append(line2String(USERNAME, username));
         toPrint.append(line2String(PASSWORD, password));
         toPrint.append(line2String(REGISTRATION_DATE, registrationDate));
-        toPrint.append(line2String(EVENT_ID, eventId != null ? eventId.toString() : ""));
         for (Map.Entry<String, Object> entry : attributes.entrySet()) {
             toPrint.append(line2String(entry.getKey(), entry.getValue()));
         }

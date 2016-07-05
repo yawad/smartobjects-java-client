@@ -3,7 +3,6 @@ package com.mnubo.java.sdk.client.mapper;
 import static com.mnubo.java.sdk.client.mapper.MapperUtils.*;
 import static com.mnubo.java.sdk.client.models.Owner.USERNAME;
 import static com.mnubo.java.sdk.client.models.SmartObject.DEVICE_ID;
-import static com.mnubo.java.sdk.client.models.SmartObject.EVENT_ID;
 import static com.mnubo.java.sdk.client.models.SmartObject.OBJECT_TYPE;
 import static com.mnubo.java.sdk.client.models.SmartObject.OWNER;
 import static com.mnubo.java.sdk.client.models.SmartObject.REGISTRATION_DATE;
@@ -63,16 +62,10 @@ public class SmartObjectDeserializer extends StdDeserializer<SmartObject> {
                 throwIfNotProperType(Owner.REGISTRATION_DATE, fieldValue, DATETIME_TYPE);
                 builder.withRegistrationDate(MapperUtils.convertToDatetime(fieldValue.toString()));
             }
-            else if (entry.getKey().equals(EVENT_ID)) {
-
-                throwIfNotProperType(Owner.EVENT_ID, fieldValue, UUID_TYPE);
-                builder.withEventId(convertToUUID(fieldValue.toString()));
-            }
             else {
 
                 if (fieldName.toLowerCase().equals(DEVICE_ID) || fieldName.toLowerCase().equals(OBJECT_TYPE) ||
-                        fieldName.toLowerCase().equals(OWNER) || fieldName.toLowerCase().equals(REGISTRATION_DATE) ||
-                        fieldName.toLowerCase().equals(EVENT_ID)) {
+                        fieldName.toLowerCase().equals(OWNER) || fieldName.toLowerCase().equals(REGISTRATION_DATE)) {
                     throw new IllegalArgumentException(format("Reserved field %s must be lowercase.",
                             fieldName.toLowerCase()));
                 }

@@ -1,6 +1,8 @@
 package com.mnubo.java.sdk.client.spi;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import com.mnubo.java.sdk.client.models.Event;
 import com.mnubo.java.sdk.client.models.result.Result;
@@ -38,4 +40,18 @@ public interface EventsSDK {
      * @return
      */
     List<Result> send(Event... events);
+
+        /**
+     * Check if events exists
+     * @param eventIds The list of event Ids to check if exists. ["eventA", "eventb"]
+     * @return The list of event ids with an existing boolean, true if it exists, false if it does not exist. [{"eventA" : false},{"eevntb":true}]
+     */
+    List<Map<String, Boolean>> eventsExist(List<UUID> eventIds);
+
+    /**
+     * Check if a specify event exists
+     * @param eventId The event Id to check if exists. "eventA"
+     * @return Existing boolean value. false
+     */
+    Boolean isEventExists(UUID eventId);
 }
