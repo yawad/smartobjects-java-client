@@ -54,15 +54,15 @@ public interface ObjectsSDK {
 
     /**
      * It checks if certain objects exist
-     * @param deviceIds The list of device Ids to check if exists. ["objectA", "objectb"]
-     * @return The list of device ids with an existing boolean, true if it exists, false if it does not exist. [{"objectA" : false},{"objectb":true}]
+     * @param deviceIds The list of device Ids to check if exists. ["objectA", "objectB"]
+     * @return The list of device ids with an existing boolean, true if it exists, false if it does not exist. [{"objectA" : false},{"objectB":true}]. Map is ordered, keys are sorted in the same order as the given device ids.
      */
-    List<Map<String, Boolean>> objectsExist(List<String> deviceIds);
+    Map<String, Boolean> objectsExist(List<String> deviceIds);
 
     /**
      * It checks if a specify object exist
      * @param deviceId The device Id to check if exists. "objectA"
      * @return Existing boolean value. false
      */
-    Boolean isObjectExists(String deviceId);
+    Boolean objectExists(String deviceId);
 }

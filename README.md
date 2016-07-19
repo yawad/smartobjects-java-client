@@ -307,7 +307,7 @@ MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CO
 OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
 
 //true if the owner exists, false if not.
-boolean doesExists = mnuboOwnersClient.isOwnerExists( "john.smith@mycompany.com" );
+boolean doesExists = mnuboOwnersClient.ownerExists( "john.smith@mycompany.com" );
 ```
 
 Check if a batch of owners exist
@@ -462,7 +462,7 @@ The JSON file "myObjectFile.json" is as follows:
 ```
 
 Create or update a batch of Objects
-----------------------
+-----------------------------------
 To create a batch of objects you need to:
 1. Request an ObjectSDK interface from the mnubo client instance.
 2. Build a list of objects.
@@ -536,7 +536,7 @@ mnuboObjectClient.delete( "connect_alpha.6hv135nw00393.1234567" );
 ```
 
 Check if an object exists
----------------
+-------------------------
 This example describes how to validate if an Object exists:
 ```
 //Request a mnubo client using the basic method.
@@ -546,7 +546,7 @@ MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CO
 ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
 
 //true if the object exists, false if not.
-boolean doesExists = mnuboObjectClient.isObjectExists( "connect_alpha.6hv135nw00393.1234567" );
+boolean doesExists = mnuboObjectClient.objectExists( "connect_alpha.6hv135nw00393.1234567" );
 ```
 
 Check if a batch of objects exist

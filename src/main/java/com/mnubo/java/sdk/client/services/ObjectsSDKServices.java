@@ -7,6 +7,7 @@ import static java.util.Arrays.*;
 
 import java.util.*;
 
+import com.mnubo.java.sdk.client.mapper.ExistsResultDeserializer;
 import com.mnubo.java.sdk.client.models.SmartObject;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.ObjectsSDK;
@@ -76,29 +77,22 @@ class ObjectsSDKServices implements ObjectsSDK {
     }
 
     @Override
-    public List<Map<String, Boolean>> objectsExist(List<String> deviceIds) {
+    public Map<String, Boolean> objectsExist(List<String> deviceIds) {
         validNotNull(deviceIds, "List of the deviceIds cannot be null.");
 
         final String url = sdkCommonServices.getIngestionBaseUri()
                 .path(OBJECT_PATH_EXITS)
                 .build().toString();
 
-        List<Map<String,Boolean>> result = new ArrayList<>();
-        return sdkCommonServices.postRequest(url, result.getClass(), deviceIds);
+        return sdkCommonServices.postRequest(url, ExistsResultDeserializer.targetClass, deviceIds);
     }
 
     @Override
-    public Boolean isObjectExists(String deviceId) {
+    public Boolean objectExists(String deviceId) {
         notBlank(deviceId, "deviceId cannot be blank.");
 
-        final String url = sdkCommonServices.getIngestionBaseUri()
-                .path(OBJECT_PATH_EXITS)
-                .pathSegment(deviceId)
-                .build().toString();
+        final Map<String, Boolean> subResults = objectsExist(Collections.singletonList(deviceId));
 
-        Map<String, Boolean> results = new HashMap<>();
-        results = sdkCommonServices.getRequest(url, results.getClass());
-        return results == null || results.size() != 1 || results.get(deviceId) == null ?
-                false : results.get(deviceId);
+        return subResults.get(deviceId);
     }
 }

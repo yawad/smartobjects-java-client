@@ -74,8 +74,6 @@ public class OwnersSDKServicesTest {
                         }
                         resVal.append("]");
                         response.setEntity(resVal.toString(), MediaType.APPLICATION_JSON);
-                        System.out.println(resVal.toString());
-
                     }
                     else {
                         response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
@@ -133,7 +131,6 @@ public class OwnersSDKServicesTest {
                         }
                         resVal.append("]");
                         response.setEntity(resVal.toString(), MediaType.APPLICATION_JSON);
-                        System.out.println(resVal.toString());
                     }
                     else {
                         response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
