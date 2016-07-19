@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.mnubo.java.sdk.client.models.SmartObject;
+import static com.mnubo.java.sdk.client.mapper.ObjectMapperConfig.genericObjectMapper;
 
 public class SmartObjectSerializerTest extends AbstractSerializerTest {
     @Test
@@ -35,7 +36,7 @@ public class SmartObjectSerializerTest extends AbstractSerializerTest {
                 .withAttributes(attributes)
                 .build();
 
-        String json = mapper.writeValueAsString(object);
+        String json = genericObjectMapper.writeValueAsString(object);
         JSONAssert.assertEquals(format(
                 "{\"x_registration_date\":\"%s\",\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
                 formatDate(now)), json, true);
@@ -50,7 +51,7 @@ public class SmartObjectSerializerTest extends AbstractSerializerTest {
                 .withOwner("owner")
                 .build();
 
-        String json = mapper.writeValueAsString(object);
+        String json = genericObjectMapper.writeValueAsString(object);
         JSONAssert.assertEquals(
                 "{\"x_device_id\":\"test\",\"x_owner\":{\"username\":\"owner\"}}",
                 json, true);
@@ -64,7 +65,7 @@ public class SmartObjectSerializerTest extends AbstractSerializerTest {
                 .withOwner("oWner")
                 .build();
 
-        String json = mapper.writeValueAsString(object);
+        String json = genericObjectMapper.writeValueAsString(object);
         JSONAssert.assertEquals(
                 "{\"x_device_id\":\"test\",\"x_owner\":{\"username\":\"owner\"}}", json, true);
     }
@@ -77,7 +78,7 @@ public class SmartObjectSerializerTest extends AbstractSerializerTest {
                 .withRegistrationDate(null)
                 .build();
 
-        String json = mapper.writeValueAsString(object);
+        String json = genericObjectMapper.writeValueAsString(object);
         assertThat(json,equalTo("{}"));
     }
 
@@ -91,7 +92,7 @@ public class SmartObjectSerializerTest extends AbstractSerializerTest {
                 .withAttributes(attributes)
                 .build();
 
-        String json = mapper.writeValueAsString(object);
+        String json = genericObjectMapper.writeValueAsString(object);
         JSONAssert.assertEquals("{\"list\":[\"1\",\"2\"]}", json, true);
     }
 }

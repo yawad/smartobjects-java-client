@@ -1,19 +1,21 @@
 package com.mnubo.java.sdk.client.services;
 
-import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
-import static java.util.Arrays.*;
-
-import java.util.*;
-
-import com.mnubo.java.sdk.client.mapper.ExistsResultDeserializer;
+import com.mnubo.java.sdk.client.mapper.ObjectMapperConfig;
+import com.mnubo.java.sdk.client.mapper.StringExistsResultDeserializer;
 import com.mnubo.java.sdk.client.models.SmartObject;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.ObjectsSDK;
 
+import java.io.IOException;
+import java.util.*;
+
+import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
+import static java.util.Arrays.asList;
+
 class ObjectsSDKServices implements ObjectsSDK {
-    public static final String OBJECT_PATH_EXITS = OBJECT_PATH + "/exists";
+    private static final String OBJECT_PATH_EXITS = OBJECT_PATH + "/exists";
 
     private final SDKService sdkCommonServices;
 
@@ -84,7 +86,15 @@ class ObjectsSDKServices implements ObjectsSDK {
                 .path(OBJECT_PATH_EXITS)
                 .build().toString();
 
-        return sdkCommonServices.postRequest(url, ExistsResultDeserializer.targetClass, deviceIds);
+        String unparsed = sdkCommonServices.postRequest(url, String.class, deviceIds);
+
+        try {
+            return ObjectMapperConfig.stringExistsObjectMapper.readValue(unparsed, StringExistsResultDeserializer.targetClass);
+        }
+        catch(IOException ioe) {
+            throw new RuntimeException("Cannot deserialize server's response", ioe);
+        }
+
     }
 
     @Override

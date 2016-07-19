@@ -61,14 +61,14 @@ public interface OwnersSDK {
     List<Result> createUpdate(Owner... owners);
 
     /**
-     * It checks if certain owners exist
+     * It checks if owners with the given usernames exist
      * @param usernames The list of usernames to check if exists. ["userA", "userB"]
-     * @return The list of usernames with an existing boolean, true if it exists, false if it does not exist. [{"userA" : false},{"userB":true}]. Map is ordered, keys are sorted in the same order as the given usernames.
+     * @return The list of usernames with an existing boolean, true if it exists, false if it does not exist. Map is ordered, keys are sorted in the same order as the given usernames. [{"userA": false}, {"userB": true}]
      */
     Map<String, Boolean> ownersExist(List<String> usernames);
 
     /**
-     * It checks if a specify owner exists
+     * It checks if an owner with the given username exists
      * @param username The username to check if exists. "userA"
      * @return Existing boolean value. false
      */

@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import com.mnubo.java.sdk.client.models.Event;
+import static com.mnubo.java.sdk.client.mapper.ObjectMapperConfig.genericObjectMapper;
 
 public class EventDeserializerTest extends AbstractSerializerTest {
 
@@ -26,7 +27,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
                 "{\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_timestamp\":\"%s\",\"x_event_type\":\"type\",\"x_object\":{\"x_device_id\":\"deviceId\"},\"string\":\"stringValue\",\"double\":10.0,\"float\":10.0,\"list_owner\": [\"val1\",\"val2\",\"val3\"]}",
                 now);
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertTrue(event.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(event.getEventType().equals("type"));
@@ -59,9 +60,9 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_object.x_device_id' value '33' does not match TYPE 'TEXT'");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertTrue(event.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(event.getEventType().equals("type"));
@@ -92,7 +93,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
                 "{\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_timestamp\":\"%s\",\"x_event_type\":\"type\",\"x_object\":null,\"string\":\"stringValue\",\"double\":10.0,\"float\":10.0,\"list_owner\": [\"val1\",\"val2\",\"val3\"]}",
                 now);
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertTrue(event.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(event.getEventType().equals("type"));
@@ -123,7 +124,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
                 "{\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_timestamp\":\"%s\",\"x_event_type\":\"type\",\"x_object\":{},\"string\":\"stringValue\",\"double\":10.0,\"float\":10.0,\"list_owner\": [\"val1\",\"val2\",\"val3\"]}",
                 now);
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertTrue(event.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(event.getEventType().equals("type"));
@@ -153,14 +154,14 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("X_Event_Type cannot be null or empty");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
     public void testDeserializeCheckNull() throws Exception {
         String json = "{\"x_event_type\":\"type\"}";
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertThat(event.getEventType(), is(equalTo("type")));
         assertTrue(event.getDeviceId() == null);
@@ -176,7 +177,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
     public void testDeserializeWithSmartObject() throws Exception {
         String json = "{\"x_event_type\":\"type\",\"string\":\"stringValue\",\"double\":10.0,\"float\":10.0,\"x_object\":{\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_device_id\":\"deviceId\",\"x_registration_date\":\"2015-08-15T07:00:00.174Z\"}}";
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertThat(event.getTimeseries().size(), equalTo(3));
         assertThat(event.getDeviceId(), equalTo("deviceId"));
@@ -203,14 +204,14 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
             if (status) {
 
-                Event event = mapper.readValue(json, Event.class);
+                Event event = genericObjectMapper.readValue(json, Event.class);
                 assertTrue(CompareDatetimes(event.getTimestamp(), pattern));
 
             } else {
 
                 try {
 
-                    mapper.readValue(json, Event.class);
+                    genericObjectMapper.readValue(json, Event.class);
 
                 } catch (IllegalArgumentException ex) {
 
@@ -230,7 +231,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
                 format("{\"x_event_type\":\"type\",\"x_timestamp\":\"%s\",\"string\":\"stringValue\",\"double\":10.0,\"float\":10.0}",
                         formatDate(now));
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertThat(event.getEventType(), equalTo("type"));
         assertThat(event.getTimestamp(), equalTo(now.withZone(UTC)));
@@ -256,7 +257,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
                 format("{\"x_event_type\":\"type\",\"Val1\":\"val1\",\"VAL2\":\"val2\",\"val3\":\"val3\"}",
                         formatDate(now));
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertThat(event.getTimeseries().size(), equalTo(3));
 
@@ -283,7 +284,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_event_type' value 'true' does not match TYPE 'TEXT'");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
@@ -292,7 +293,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_event_type' value '999' does not match TYPE 'TEXT'");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
@@ -301,7 +302,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_object' value 'object' does not match TYPE 'SMARTOBJECT'");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
@@ -310,7 +311,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("UUID has to be represented by the standard 36-char representation");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
@@ -320,7 +321,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field event_id must be lowercase.");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
@@ -330,7 +331,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_object must be lowercase.");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
@@ -340,7 +341,7 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_timestamp must be lowercase.");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
@@ -350,14 +351,14 @@ public class EventDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_event_type must be lowercase.");
-        mapper.readValue(json, Event.class);
+        genericObjectMapper.readValue(json, Event.class);
     }
 
     @Test
     public void testDeserializeObjectMultiTypeAttributes() throws Exception {
         String json = "{\"x_event_type\": \"reading\",\"x_object\":{ \"x_device_id\":null,\"string\":\"text\",\"true\":true,\"false\":false,\"int\":10,\"double\":10.0},\"x_timestamp\": \"2015-11-02T16:48:12.174Z\",\"humidity\": 80.4,\"temperature\": 22.4,\"wind_speed\": 43.5 }";
 
-        Event event = mapper.readValue(json, Event.class);
+        Event event = genericObjectMapper.readValue(json, Event.class);
 
         assertThat(event.getTimeseries().size(), equalTo(3));
 

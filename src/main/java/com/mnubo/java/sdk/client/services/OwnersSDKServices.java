@@ -4,16 +4,19 @@ import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
 import static java.util.Arrays.*;
 
+import java.io.IOException;
 import java.util.*;
 
-import com.mnubo.java.sdk.client.mapper.ExistsResultDeserializer;
+import com.mnubo.java.sdk.client.mapper.ObjectMapperConfig;
+import com.mnubo.java.sdk.client.mapper.StringExistsResultDeserializer;
+import com.mnubo.java.sdk.client.mapper.UUIDExistsResultDeserializer;
 import com.mnubo.java.sdk.client.models.Owner;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.OwnersSDK;
 
 class OwnersSDKServices implements OwnersSDK {
-    public static final String OWNER_PATH = "/owners";
-    public static final String OWNER_PATH_EXIST = OWNER_PATH + "/exists";
+    private static final String OWNER_PATH = "/owners";
+    private static final String OWNER_PATH_EXIST = OWNER_PATH + "/exists";
     private final SDKService sdkCommonServices;
 
     OwnersSDKServices(SDKService sdkCommonServices) {
@@ -96,7 +99,14 @@ class OwnersSDKServices implements OwnersSDK {
                 .path(OWNER_PATH_EXIST)
                 .build().toString();
 
-        return sdkCommonServices.postRequest(url, ExistsResultDeserializer.targetClass, usernames);
+        String unparsed = sdkCommonServices.postRequest(url, String.class, usernames);
+
+        try {
+            return ObjectMapperConfig.stringExistsObjectMapper.readValue(unparsed, StringExistsResultDeserializer.targetClass);
+        }
+        catch(IOException ioe) {
+            throw new RuntimeException("Cannot deserialize server's response", ioe);
+        }
     }
 
     @Override

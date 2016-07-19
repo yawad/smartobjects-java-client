@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import com.mnubo.java.sdk.client.models.Owner;
+import static com.mnubo.java.sdk.client.mapper.ObjectMapperConfig.genericObjectMapper;
 
 public class OwnerDeserializerTest extends AbstractSerializerTest {
     @Test
@@ -25,7 +26,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
                 "{\"username\":\"test\",\"x_password\":\"password\",\"x_registration_date\":\"%s\",\"age\": 89,\"list_owner\": [\"val1\",\"val2\",\"val3\"]}",
                 now);
 
-        Owner owner = mapper.readValue(json, Owner.class);
+        Owner owner = genericObjectMapper.readValue(json, Owner.class);
 
         assertThat(owner.getUsername(), equalTo("test"));
         assertTrue(owner.getPassword().equals("password"));
@@ -44,7 +45,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
     public void testDeserializeCheckNull() throws Exception {
         String json = "{}";
 
-        Owner owner = mapper.readValue(json, Owner.class);
+        Owner owner = genericObjectMapper.readValue(json, Owner.class);
 
         assertTrue(owner.getPassword() == null);
         assertTrue(owner.getUsername() == null);
@@ -60,7 +61,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_password' value '9898.3' does not match TYPE 'TEXT'");
-        mapper.readValue(json, Owner.class);
+        genericObjectMapper.readValue(json, Owner.class);
     }
 
     @Test
@@ -68,7 +69,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
     {
         String json = "{\"Val1\":\"val1\",\"VAL2\":\"val2\",\"val3\":\"val3\"}";
 
-        Owner owner = mapper.readValue( json , Owner.class );
+        Owner owner = genericObjectMapper.readValue( json , Owner.class );
 
         assertThat( owner.getAttributes().size() , equalTo( 3 ) );
 
@@ -96,7 +97,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'username' value 'false' does not match TYPE 'TEXT'");
-        mapper.readValue(json, Owner.class);
+        genericObjectMapper.readValue(json, Owner.class);
     }
 
     @Test
@@ -104,7 +105,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
     {
         String json = "{\"age\": 89,\"list_owner\": [\"val1\",\"val2\",\"val3\"]}";
 
-        Owner owner = mapper.readValue( json , Owner.class );
+        Owner owner = genericObjectMapper.readValue( json , Owner.class );
 
         assertThat( owner.getAttributes().size() , equalTo( 2 ) );
 
@@ -125,14 +126,14 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
 
             if(status) {
 
-                Owner owner = mapper.readValue(json, Owner.class);
+                Owner owner = genericObjectMapper.readValue(json, Owner.class);
                 assertTrue(CompareDatetimes(owner.getRegistrationDate(), pattern));
 
             } else {
 
                 try {
 
-                    mapper.readValue(json, Owner.class);
+                    genericObjectMapper.readValue(json, Owner.class);
 
                 } catch (IllegalArgumentException ex) {
 
@@ -151,7 +152,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_password must be lowercase.");
-        mapper.readValue(json, Owner.class);
+        genericObjectMapper.readValue(json, Owner.class);
     }
 
     @Test
@@ -161,7 +162,7 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_registration_date must be lowercase.");
-        mapper.readValue(json, Owner.class);
+        genericObjectMapper.readValue(json, Owner.class);
     }
 
     @Test
@@ -171,6 +172,6 @@ public class OwnerDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field username must be lowercase.");
-        mapper.readValue(json, Owner.class);
+        genericObjectMapper.readValue(json, Owner.class);
     }
 }

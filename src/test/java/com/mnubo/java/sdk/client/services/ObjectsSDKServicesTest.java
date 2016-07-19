@@ -1,14 +1,8 @@
 package com.mnubo.java.sdk.client.services;
 
-import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
-import static com.mnubo.java.sdk.client.services.ObjectsSDKServices.OBJECT_PATH_EXITS;
-import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 
 import java.util.*;
 
@@ -36,27 +30,6 @@ import com.mnubo.java.sdk.client.spi.ObjectsSDK;
 import org.springframework.web.client.RestTemplate;
 
 public class ObjectsSDKServicesTest {
-//    private ObjectsSDK objectsClient;
-//
-//    protected static ResponseEntity httpResponse = mock(ResponseEntity.class);
-//
-//    @Before
-//    public void objectSetup() {
-//        objectsClient = getClient().getObjectClient();
-//
-//        Result[] resultsMockSetup = {
-//                new Result("idObjectTest1", ResultStates.success, "", false),
-//                new Result("idObjectResult2", ResultStates.error, "Invalid attribute X for the Object", false),
-//                new Result("idObjectTest3", ResultStates.success, "", false),
-//                new Result("idObjectTest4", ResultStates.error, "Error Y", false)
-//        };
-//
-//        // Mock Call PUT Objects
-//        when(httpResponse.getBody()).thenReturn(resultsMockSetup);
-//        when(restTemplate.exchange(any(String.class), eq(HttpMethod.PUT), any(HttpEntity.class), eq(Result[].class)))
-//                         .thenReturn(httpResponse);
-//    }
-
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
 

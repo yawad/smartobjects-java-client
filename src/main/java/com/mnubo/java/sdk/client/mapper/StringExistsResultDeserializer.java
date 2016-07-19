@@ -10,10 +10,10 @@ import com.fasterxml.jackson.databind.node.BooleanNode;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
-public class ExistsResultDeserializer extends StdDeserializer<LinkedHashMap<String, Boolean>> {
+public class StringExistsResultDeserializer extends StdDeserializer<LinkedHashMap<String, Boolean>> {
     public static final Class<LinkedHashMap<String, Boolean>> targetClass = (Class<LinkedHashMap<String, Boolean>>)new LinkedHashMap<String, Boolean>().getClass();
 
-    public ExistsResultDeserializer() {
+    public StringExistsResultDeserializer() {
         super(LinkedHashMap.class);
     }
 

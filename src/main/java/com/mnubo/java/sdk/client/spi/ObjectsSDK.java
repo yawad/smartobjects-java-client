@@ -53,14 +53,14 @@ public interface ObjectsSDK {
     List<Result> createUpdate(SmartObject... objects);
 
     /**
-     * It checks if certain objects exist
+     * It checks if objects with the given device ids exist
      * @param deviceIds The list of device Ids to check if exists. ["objectA", "objectB"]
-     * @return The list of device ids with an existing boolean, true if it exists, false if it does not exist. [{"objectA" : false},{"objectB":true}]. Map is ordered, keys are sorted in the same order as the given device ids.
+     * @return The list of device ids with an existing boolean, true if it exists, false if it does not exist. Map is ordered, keys are sorted in the same order as the given device ids. [{"objectA": false}, {"objectB": true}]
      */
     Map<String, Boolean> objectsExist(List<String> deviceIds);
 
     /**
-     * It checks if a specify object exist
+     * It checks if an object with the given device id exists
      * @param deviceId The device Id to check if exists. "objectA"
      * @return Existing boolean value. false
      */

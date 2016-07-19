@@ -1,22 +1,22 @@
 package com.mnubo.java.sdk.client.services;
 
-import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.notNullNorEmpty;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
-import static java.util.Arrays.*;
-
-import java.util.*;
-
+import com.mnubo.java.sdk.client.mapper.ObjectMapperConfig;
+import com.mnubo.java.sdk.client.mapper.UUIDExistsResultDeserializer;
 import com.mnubo.java.sdk.client.models.Event;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.EventsSDK;
 
-class EventsSDKServices implements EventsSDK {
+import java.io.IOException;
+import java.util.*;
 
-    public static final String EVENT_PATH = "/events";
-    public static final String EVENT_PATH_SEGMENT = "events";
-    public static final String EVENT_PATH_EXITS = EVENT_PATH + "/exists";
+import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.*;
+import static java.util.Arrays.asList;
+
+class EventsSDKServices implements EventsSDK {
+    private static final String EVENT_PATH = "/events";
+    private static final String EVENT_PATH_SEGMENT = "events";
+    private static final String EVENT_PATH_EXITS = EVENT_PATH + "/exists";
     private static final String REPORT_RESULTS_QUERY_PARAM = "report_results";
     private final SDKService sdkCommonServices;
 
@@ -61,30 +61,30 @@ class EventsSDKServices implements EventsSDK {
     }
 
     @Override
-    public List<Map<String, Boolean>> eventsExist(List<UUID> eventIds) {
+    public Map<UUID, Boolean> eventsExist(List<UUID> eventIds) {
         validNotNull(eventIds, "List of the eventIds cannot be null.");
 
         final String url = sdkCommonServices.getIngestionBaseUri()
                 .path(EVENT_PATH_EXITS)
                 .build().toString();
 
-        List<Map<String,Boolean>> result = new ArrayList<>();
-        return sdkCommonServices.postRequest(url, result.getClass(), eventIds);
+        String unparsed = sdkCommonServices.postRequest(url, String.class, eventIds);
+
+        try {
+            return ObjectMapperConfig.uuidExistsObjectMapper.readValue(unparsed, UUIDExistsResultDeserializer.targetClass);
+        }
+        catch(IOException ioe) {
+            throw new RuntimeException("Cannot deserialize server's response", ioe);
+        }
     }
 
     @Override
     public Boolean isEventExists(UUID eventId) {
         validNotNull(eventId, "eventId cannot be blank.");
 
-        final String url = sdkCommonServices.getIngestionBaseUri()
-                .path(EVENT_PATH_EXITS)
-                .pathSegment(eventId.toString())
-                .build().toString();
+        final Map<UUID, Boolean> subResults = eventsExist(Collections.singletonList(eventId));
 
-        Map<String, Boolean> results = new HashMap<>();
-        results = sdkCommonServices.getRequest(url, results.getClass());
-        return results == null || results.size() != 1 || results.get(eventId.toString()) == null ?
-                false : results.get(eventId.toString());
+        return subResults.get(eventId);
     }
 
     private List<Result> postRequest(String url, Object object) {

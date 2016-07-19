@@ -794,7 +794,7 @@ for(Result r: results) {
 ```
 
 Check if an event exists
----------------
+------------------------
 This example describes how to validate if an event exists:
 ```
 //Request a mnubo client using the basic method.
@@ -804,11 +804,11 @@ MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CO
 EventsSDK mnuboEventClient = mnuboClient.getEventClient();
 
 //true if the event exists, false if not.
-boolean isExists = mnuboEventClient.isEventExists( "11111111-2222-1111-6666-555555555555" );
+boolean doesExists = mnuboEventClient.eventExists( UUID.fromString("11111111-2222-1111-6666-555555555555") );
 ```
 
 Check if a batch of events exist
----------------
+--------------------------------
 This example describes how to validate if a list of events exists:
 ```
 //Request a mnubo client using the basic method.
@@ -817,11 +817,11 @@ MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CO
 //get an Event client interface
 EventsSDK mnuboEventClient = mnuboClient.getEventClient();
 
-map<String,boolean> exists = mnuboEventClient.eventsExist( Arrays.asList("22222222-2222-2222-2222-222222222222", "11111111-1111-1111-1111-111111111111") );
+Map<String, Boolean> exists = mnuboEventClient.eventsExist( Arrays.asList(UUID.fromString("22222222-2222-2222-2222-222222222222"), UUID.fromString("11111111-1111-1111-1111-111111111111")) );
 //true if the event `22222222-2222-2222-2222-222222222222` exists, false if not.
-bollean eventA = exists.get("22222222-2222-2222-2222-222222222222")
+bollean eventA = exists.get(UUID.fromString("22222222-2222-2222-2222-222222222222"))
 //true if the event `11111111-1111-1111-1111-111111111111` exists, false if not.
-bollean eventB = exists.get("11111111-1111-1111-1111-111111111111")
+bollean eventB = exists.get(UUID.fromString("11111111-1111-1111-1111-111111111111"))
 ```
 
 Searching
