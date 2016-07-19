@@ -6,12 +6,12 @@ import static java.util.Arrays.*;
 
 import java.util.*;
 
+import com.mnubo.java.sdk.client.mapper.ExistsResultDeserializer;
 import com.mnubo.java.sdk.client.models.Owner;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.OwnersSDK;
 
 class OwnersSDKServices implements OwnersSDK {
-
     public static final String OWNER_PATH = "/owners";
     public static final String OWNER_PATH_EXIST = OWNER_PATH + "/exists";
     private final SDKService sdkCommonServices;
@@ -89,29 +89,22 @@ class OwnersSDKServices implements OwnersSDK {
     }
 
     @Override
-    public List<Map<String, Boolean>> ownersExist(List<String> usernames) {
+    public Map<String, Boolean> ownersExist(List<String> usernames) {
         validNotNull(usernames, "List of the usernames cannot be null.");
 
         final String url = sdkCommonServices.getIngestionBaseUri()
                 .path(OWNER_PATH_EXIST)
                 .build().toString();
 
-        List<Map<String,Boolean>> result = new ArrayList<>();
-        return sdkCommonServices.postRequest(url, result.getClass(), usernames);
+        return sdkCommonServices.postRequest(url, ExistsResultDeserializer.targetClass, usernames);
     }
 
     @Override
-    public Boolean isOwnerExists(String username) {
+    public Boolean ownerExists(String username) {
         notBlank(username, "username cannot be blank.");
 
-        final String url = sdkCommonServices.getIngestionBaseUri()
-                .path(OWNER_PATH_EXIST)
-                .pathSegment(username)
-                .build().toString();
+        final Map<String, Boolean> subResults = ownersExist(Collections.singletonList(username));
 
-        Map<String, Boolean> results = new HashMap<>();
-        results = sdkCommonServices.getRequest(url, results.getClass());
-        return results == null || results.size() != 1 || results.get(username) == null ?
-                false : results.get(username);
+        return subResults.get(username);
     }
 }

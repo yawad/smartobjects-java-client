@@ -18,6 +18,8 @@ import com.mnubo.java.sdk.client.models.Event;
 import com.mnubo.java.sdk.client.models.Owner;
 import com.mnubo.java.sdk.client.models.SmartObject;
 
+import java.util.LinkedHashMap;
+
 public abstract class ObjectMapperConfig {
     public static ObjectMapper getObjectMapper() {
         ObjectMapper objectMapper;
@@ -57,6 +59,7 @@ public abstract class ObjectMapperConfig {
         SimpleModule module = new SimpleModule();
         module.addSerializer(new OwnerSerializer());
         module.addDeserializer(Owner.class, new OwnerDeserializer());
+        module.addDeserializer(LinkedHashMap.class, new ExistsResultDeserializer());
         return module;
     }
 
