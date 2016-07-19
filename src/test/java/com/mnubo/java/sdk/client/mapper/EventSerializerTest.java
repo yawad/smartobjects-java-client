@@ -13,6 +13,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.mnubo.java.sdk.client.models.Event;
 
+import static com.mnubo.java.sdk.client.mapper.ObjectMapperConfig.genericObjectMapper;
+
 public class EventSerializerTest extends AbstractSerializerTest {
     @Test
     public void testSerialize() throws Exception {
@@ -33,7 +35,7 @@ public class EventSerializerTest extends AbstractSerializerTest {
                 .withEventType("type")
                 .build();
 
-        String json = mapper.writeValueAsString(event);
+        String json = genericObjectMapper.writeValueAsString(event);
         JSONAssert.assertEquals(format(
                 "{\"x_timestamp\":\"%s\",\"x_object\":{\"x_device_id\":\"device\"},\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_event_type\":\"type\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
                 formatDate(event.getTimestamp())), json, true);
@@ -50,7 +52,7 @@ public class EventSerializerTest extends AbstractSerializerTest {
                 .withEventType("type")
                 .build();
 
-        String json = mapper.writeValueAsString(event);
+        String json = genericObjectMapper.writeValueAsString(event);
         JSONAssert.assertEquals(format(
                 "{\"x_timestamp\":\"%s\",\"x_event_type\":\"type\",\"list\":[\"1\",\"2\"]}",
                 formatDate(event.getTimestamp())), json, true);
@@ -64,7 +66,7 @@ public class EventSerializerTest extends AbstractSerializerTest {
                 .withEventType("type")
                 .build();
 
-        String json = mapper.writeValueAsString(event);
+        String json = genericObjectMapper.writeValueAsString(event);
         JSONAssert.assertEquals(format(
                 "{\"x_timestamp\":\"%s\",\"x_object\":{\"x_device_id\":\"deviceId\"},\"x_event_type\":\"type\"}",
                 formatDate(event.getTimestamp())), json, true);
@@ -82,7 +84,7 @@ public class EventSerializerTest extends AbstractSerializerTest {
     public void testSerializeWithTimeStampNull() throws Exception {
         Event event = Event.builder().withEventType("type").withTimestamp(null).build();
 
-        String json = mapper.writeValueAsString(event);
+        String json = genericObjectMapper.writeValueAsString(event);
         JSONAssert.assertEquals(
                 format("{\"x_timestamp\":\"%s\",\"x_event_type\":\"type\"}", event.getTimestamp()),
                 json, true);

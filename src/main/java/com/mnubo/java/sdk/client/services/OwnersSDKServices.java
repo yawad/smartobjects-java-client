@@ -4,15 +4,19 @@ import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
 import static java.util.Arrays.*;
 
+import java.io.IOException;
 import java.util.*;
 
+import com.mnubo.java.sdk.client.mapper.ObjectMapperConfig;
+import com.mnubo.java.sdk.client.mapper.StringExistsResultDeserializer;
+import com.mnubo.java.sdk.client.mapper.UUIDExistsResultDeserializer;
 import com.mnubo.java.sdk.client.models.Owner;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.OwnersSDK;
 
 class OwnersSDKServices implements OwnersSDK {
-
-    public static final String OWNER_PATH = "/owners";
+    private static final String OWNER_PATH = "/owners";
+    private static final String OWNER_PATH_EXIST = OWNER_PATH + "/exists";
     private final SDKService sdkCommonServices;
 
     OwnersSDKServices(SDKService sdkCommonServices) {
@@ -85,5 +89,32 @@ class OwnersSDKServices implements OwnersSDK {
     @Override
     public List<Result> createUpdate(Owner... owners) {
         return createUpdate(asList(owners));
+    }
+
+    @Override
+    public Map<String, Boolean> ownersExist(List<String> usernames) {
+        validNotNull(usernames, "List of the usernames cannot be null.");
+
+        final String url = sdkCommonServices.getIngestionBaseUri()
+                .path(OWNER_PATH_EXIST)
+                .build().toString();
+
+        String unparsed = sdkCommonServices.postRequest(url, String.class, usernames);
+
+        try {
+            return ObjectMapperConfig.stringExistsObjectMapper.readValue(unparsed, StringExistsResultDeserializer.targetClass);
+        }
+        catch(IOException ioe) {
+            throw new RuntimeException("Cannot deserialize server's response", ioe);
+        }
+    }
+
+    @Override
+    public Boolean ownerExists(String username) {
+        notBlank(username, "username cannot be blank.");
+
+        final Map<String, Boolean> subResults = ownersExist(Collections.singletonList(username));
+
+        return subResults.get(username);
     }
 }

@@ -1,19 +1,18 @@
 package com.mnubo.java.sdk.client.mapper;
 
-import static java.lang.String.format;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import com.mnubo.java.sdk.client.models.Owner;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import com.mnubo.java.sdk.client.models.Owner;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.mnubo.java.sdk.client.mapper.ObjectMapperConfig.genericObjectMapper;
+import static java.lang.String.format;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class OwnerSerializerTest extends AbstractSerializerTest {
     @Test
@@ -28,16 +27,15 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
 
         Owner owner = Owner
                 .builder()
-                .withEventId(UUID.fromString("9ab392d8-a865-48da-9035-0dc0a728b454"))
                 .withUsername("username")
                 .withAttributes(attributes)
                 .withPassword("password")
                 .withRegistrationDate(now)
                 .build();
 
-        String json = mapper.writeValueAsString(owner);
+        String json = genericObjectMapper.writeValueAsString(owner);
         JSONAssert.assertEquals(format(
-                "{\"x_registration_date\":\"%s\",\"x_password\":\"password\",\"username\":\"username\",\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
+                "{\"x_registration_date\":\"%s\",\"x_password\":\"password\",\"username\":\"username\",\"boolean\":false,\"string\":\"stringValue\",\"float\":10.0,\"double\":10.0}",
                 formatDate(now)), json, true);
     }
 
@@ -51,7 +49,7 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
                 .withAttributes(attributes)
                 .build();
 
-        String json = mapper.writeValueAsString(event);
+        String json = genericObjectMapper.writeValueAsString(event);
         JSONAssert.assertEquals("{\"list\":[\"1\",\"2\"]}", json, true);
     }
 
@@ -63,7 +61,7 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
                 .withPassword("password")
                 .build();
 
-        String json = mapper.writeValueAsString(owner);
+        String json = genericObjectMapper.writeValueAsString(owner);
         JSONAssert.assertEquals(
                 "{\"x_password\":\"password\",\"username\":\"username\"}", json, true);
     }
@@ -76,7 +74,7 @@ public class OwnerSerializerTest extends AbstractSerializerTest {
                 .withRegistrationDate(null)
                 .build();
 
-        String json = mapper.writeValueAsString(owner);
+        String json = genericObjectMapper.writeValueAsString(owner);
         assertThat(json,equalTo("{}"));
     }
 }

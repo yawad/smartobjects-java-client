@@ -41,22 +41,15 @@ public final class SmartObject {
      */
     public static final String OWNER = "x_owner";
 
-    /**
-     * {@value #EVENT_ID} Constant key used during the deserialization and serialization
-     * of json files.
-     */
-    public static final String EVENT_ID = "event_id";
-
     private final String deviceId;
     private final UUID objectId = null;
     private final String objectType;
     private final DateTime registrationDate;
     private final Owner owner;
     private final Map<String, Object> attributes;
-    private final UUID eventId;
 
     SmartObject(String deviceId, String objectType, DateTime registrationDate, Owner owner,
-            Map<String, Object> attributes, UUID eventId) {
+            Map<String, Object> attributes) {
         this.deviceId = deviceId;
         this.objectType = objectType;
         if(registrationDate == null) {
@@ -65,8 +58,7 @@ public final class SmartObject {
             this.registrationDate = registrationDate.withZone(UTC);
         }
         this.owner = owner;
-        this.eventId = eventId;
-        this.attributes = new HashMap<String, Object>();
+        this.attributes = new HashMap<>();
         if (attributes != null) {
             for(Map.Entry<String,Object> entry : attributes.entrySet()) {
 
@@ -104,7 +96,6 @@ public final class SmartObject {
         private DateTime registrationDate;
         private Owner owner;
         private Map<String, Object> attributes = new HashMap<String, Object>();
-        private UUID eventId;
 
         SmartObjectBuilder() {
 
@@ -193,26 +184,13 @@ public final class SmartObject {
         }
 
         /**
-         * Add an event Id to the request.
-         *
-         * @param eventId: event Id.
-         * @return SmartObjectBuilder: current Smart Object builder.
-         *
-         */
-        public SmartObjectBuilder withEventId(UUID eventId)
-        {
-            this.eventId = eventId;
-            return this;
-        }
-
-        /**
          * Build the immutable SmartObject with parameters set. Note that Device_Id and
          * Object_type parameters are mandatory.
          *
          * @return SmartObject: immutable Smart Object instance built.
          */
         public SmartObject build() {
-            return new SmartObject(deviceId, objectType, registrationDate, owner, attributes, eventId);
+            return new SmartObject(deviceId, objectType, registrationDate, owner, attributes);
         }
 
     }
@@ -291,16 +269,6 @@ public final class SmartObject {
         return owner;
     }
 
-    /**
-     * returns the event id associate to each request.
-     *
-     * @return event id.
-     *
-     */
-    public UUID getEventId() {
-        return eventId;
-    }
-
     @Override
     public String toString() {
         StringBuilder toPrint = new StringBuilder();
@@ -310,7 +278,6 @@ public final class SmartObject {
         toPrint.append(line2String(OBJECT_TYPE, objectType));
         toPrint.append(line2String(REGISTRATION_DATE, registrationDate));
         toPrint.append(line2String(OWNER + "." + USERNAME, owner != null ? owner.getUsername() : null));
-        toPrint.append(line2String(EVENT_ID, eventId != null ? eventId.toString() : ""));
         for (Map.Entry<String, Object> entry : attributes.entrySet()) {
             toPrint.append(line2String(entry.getKey(), entry.getValue()));
         }

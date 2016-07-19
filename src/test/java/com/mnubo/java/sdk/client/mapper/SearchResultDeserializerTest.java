@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.mnubo.java.sdk.client.models.result.SearchResult;
+import static com.mnubo.java.sdk.client.mapper.ObjectMapperConfig.genericObjectMapper;
 
 public class SearchResultDeserializerTest extends AbstractSerializerTest {
 
@@ -27,7 +28,7 @@ public class SearchResultDeserializerTest extends AbstractSerializerTest {
         rows.add(Arrays.asList((Object)87893.2333,"ccc",false));
         SearchResult expected = new SearchResult(colums, rows);
 
-        SearchResult result = mapper.readValue(json, SearchResult.class);
+        SearchResult result = genericObjectMapper.readValue(json, SearchResult.class);
 
         assertThat(result, equalTo(expected));
     }

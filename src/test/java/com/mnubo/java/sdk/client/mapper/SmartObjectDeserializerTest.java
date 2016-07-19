@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import com.mnubo.java.sdk.client.models.SmartObject;
+import static com.mnubo.java.sdk.client.mapper.ObjectMapperConfig.genericObjectMapper;
 
 public class SmartObjectDeserializerTest extends AbstractSerializerTest {
     @Test
@@ -24,13 +25,12 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
         DateTime now = DateTime.now();
 
         String json = String.format(
-                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_registration_date\":\"%s\",\"x_owner\":{\"username\":\"owner\"}}",
+                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"x_registration_date\":\"%s\",\"x_owner\":{\"username\":\"owner\"}}",
                 now);
 
-        SmartObject object = mapper.readValue(json, SmartObject.class);
+        SmartObject object = genericObjectMapper.readValue(json, SmartObject.class);
 
         assertThat(object.getDeviceId(), equalTo("test"));
-        assertTrue(object.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(object.getObjectType().equals("type"));
         assertTrue(object.getOwnerUserName().equals("owner"));
         assertTrue(object.getObjectId() == null);
@@ -62,7 +62,7 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_owner.username' value '33' does not match TYPE 'TEXT'");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 
     @Test
@@ -70,13 +70,12 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
         DateTime now = DateTime.now();
 
         String json = String.format(
-                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"x_registration_date\":\"%s\",\"x_owner\":null}",
+                "{\"x_device_id\":\"test\",\"x_object_type\":\"type\",\"string\":\"stringValue\",\"list_owner\": [\"val1\",\"val2\",\"val3\"],\"double\":10.0,\"float\":10.0,\"x_registration_date\":\"%s\",\"x_owner\":null}",
                 now);
 
-        SmartObject object = mapper.readValue(json, SmartObject.class);
+        SmartObject object = genericObjectMapper.readValue(json, SmartObject.class);
 
         assertThat(object.getDeviceId(), equalTo("test"));
-        assertTrue(object.getEventId().toString().equals("9ab392d8-a865-48da-9035-0dc0a728b454"));
         assertTrue(object.getObjectType().equals("type"));
         assertTrue(object.getOwnerUserName() == null);
         assertTrue(object.getObjectId() == null);
@@ -102,7 +101,7 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
     public void testDeserializeWithOwner() throws Exception {
         String json = "{\"x_device_id\":\"test\",\"x_owner\":{\"event_id\":\"9ab392d8-a865-48da-9035-0dc0a728b454\",\"username\":\"owner\",\"x_registration_date\":\"2015-08-28T15:08:37.577Z\",\"owner\":\"shouldnt be read\"},\"string\":\"stringValue\",\"double\":10.0,\"float\":10.0}";
 
-        SmartObject object = mapper.readValue(json, SmartObject.class);
+        SmartObject object = genericObjectMapper.readValue(json, SmartObject.class);
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("owner", "shouldnt be read");
@@ -128,7 +127,7 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_object_type' value '989' does not match TYPE 'TEXT'");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 
     @Test
@@ -137,7 +136,7 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_object_type' value 'true' does not match TYPE 'TEXT'");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 
     @Test
@@ -146,23 +145,14 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Field 'x_owner' value 'owner' does not match TYPE 'SMARTOBJECT'");
-        mapper.readValue(json, SmartObject.class);
-    }
-
-    @Test
-    public void testDeserializeWrongEventIdType() throws Exception {
-        String json = "{\"x_device_id\":\"test\",\"event_id\":\"54545c5454-054-54\",\"string\":\"stringValue\"}";
-
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("UUID has to be represented by the standard 36-char representation");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 
     @Test
     public void testDeserializedTimeseriesAreCaseInsensitive() throws Exception {
         String json = "{\"Val1\":\"val1\",\"VAL2\":\"val2\",\"val3\":\"val3\"}";
 
-        SmartObject object = mapper.readValue(json, SmartObject.class);
+        SmartObject object = genericObjectMapper.readValue(json, SmartObject.class);
 
         assertThat(object.getAttributes().size(), equalTo(3));
 
@@ -187,7 +177,7 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
     public void testDeserializeObjectMultiTypeAttributes() throws Exception {
         String json = "{\"x_device_id\": \"reading\",\"x_owner\":{ \"username\":null,\"string\":\"text\",\"true\":true,\"false\":false,\"int\":10,\"double\":10.0},\"humidity\": 80.4,\"temperature\": 22.4,\"wind_speed\": 43.5 }";
 
-        SmartObject object = mapper.readValue(json, SmartObject.class);
+        SmartObject object = genericObjectMapper.readValue(json, SmartObject.class);
 
         assertThat(object.getAttributes().size(), equalTo(3));
 
@@ -219,14 +209,14 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
             if (status) {
 
-                SmartObject object = mapper.readValue(json, SmartObject.class);
+                SmartObject object = genericObjectMapper.readValue(json, SmartObject.class);
                 assertTrue(CompareDatetimes(object.getRegistrationDate(), pattern));
 
             } else {
 
                 try {
 
-                    mapper.readValue(json, SmartObject.class);
+                    genericObjectMapper.readValue(json, SmartObject.class);
 
                 } catch (IllegalArgumentException ex) {
 
@@ -239,21 +229,12 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
     }
 
     @Test
-    public void testDeserializeEventIdWordAttributeReserved() throws Exception {
-        String json = "{\"event_ID\":\"46aabccd-4442-6665-a1f0-49889330eaf3\"}";
-
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Reserved field event_id must be lowercase.");
-        mapper.readValue(json, SmartObject.class);
-    }
-
-    @Test
     public void testDeserializeObjectTypeWordAttributeReserved() throws Exception {
         String json = "{\"x_object_typE\":\"46aabccd-4442-6665-a1f0-49889330eaf3\"}";
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_object_type must be lowercase.");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 
     @Test
@@ -262,7 +243,7 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_registration_date must be lowercase.");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 
     @Test
@@ -271,7 +252,7 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_device_id must be lowercase.");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 
     @Test
@@ -280,6 +261,6 @@ public class SmartObjectDeserializerTest extends AbstractSerializerTest {
 
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Reserved field x_owner must be lowercase.");
-        mapper.readValue(json, SmartObject.class);
+        genericObjectMapper.readValue(json, SmartObject.class);
     }
 }

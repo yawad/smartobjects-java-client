@@ -1,5 +1,27 @@
 package com.mnubo.java.sdk.client.services;
 
+import com.mnubo.java.sdk.client.config.MnuboSDKConfig;
+import com.mnubo.java.sdk.client.models.DataSet;
+import com.mnubo.java.sdk.client.models.Field;
+import com.mnubo.java.sdk.client.models.result.*;
+import com.mnubo.java.sdk.client.models.result.ResultSet.ColumnDefinition;
+import com.mnubo.java.sdk.client.models.result.SearchResult.Column;
+import com.mnubo.java.sdk.client.spi.SearchSDK;
+import com.mnubo.java.sdk.client.utils.Convert;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static com.mnubo.java.sdk.client.services.SearchSDKServices.BASIC_SEARCH_PATH;
 import static com.mnubo.java.sdk.client.services.SearchSDKServices.DATASETS_SEARCH_PATH;
 import static java.lang.String.format;
@@ -12,47 +34,31 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+public class SearchSDKServicesTest {
+    private static String HOST = "host";
+    private static RestTemplate restTemplate = mock(RestTemplate.class);
+    private static CredentialHandler credentials = mock(CredentialHandler.class);
+    private static MnuboSDKConfig config = MnuboSDKConfig.builder().withHostName(HOST).withSecurityConsumerKey("CK")
+            .withSecurityConsumerSecret("SC").build();
+    private static MnuboSDKClientImpl client = new MnuboSDKClientImpl(config, restTemplate, credentials);
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-
-import com.mnubo.java.sdk.client.models.DataSet;
-import com.mnubo.java.sdk.client.models.Field;
-import com.mnubo.java.sdk.client.models.result.ResultSet;
-import com.mnubo.java.sdk.client.models.result.ResultSet.ColumnDefinition;
-import com.mnubo.java.sdk.client.models.result.ResultValue;
-import com.mnubo.java.sdk.client.models.result.Row;
-import com.mnubo.java.sdk.client.models.result.SearchResult;
-import com.mnubo.java.sdk.client.models.result.SearchResult.Column;
-import com.mnubo.java.sdk.client.models.result.SearchResultSet;
-import com.mnubo.java.sdk.client.models.result.SearchRow;
-import com.mnubo.java.sdk.client.spi.SearchSDK;
-import com.mnubo.java.sdk.client.utils.Convert;
-
-public class SearchSDKServicesTest extends AbstractServiceTest {
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
 
     private static SearchSDK searchClient;
 
     // Query example (not used due to mock of RestTemplate)
     private static final String query = "{ \"from\": \"event\", \"select\": [ {\"value\": \"speed\"} ] }";
 
-    protected static ResponseEntity httpResponse = mock(ResponseEntity.class);
+    private static ResponseEntity httpResponse = mock(ResponseEntity.class);
 
     private static ResultSet expectedResultSet;
     private static List<DataSet> datasets;
     private static SearchResult searchResult;
-    private static List<List<Object>> searchResultRows;
 
     @BeforeClass
     public static void searchSDKSetup() {
-        searchClient = getClient().getSearchClient();
+        searchClient = client.getSearchClient();
 
         // Create Field Data
         Set<Field> fields = new HashSet<Field>();
@@ -76,7 +82,7 @@ public class SearchSDKServicesTest extends AbstractServiceTest {
         columns.add(new Column("columnTest3", "DOUBLE"));
 
         // Create data for Search Result
-        searchResultRows = new ArrayList<>();
+        final List<List<Object>> searchResultRows = new ArrayList<>();
         searchResultRows.add(searchResultRow("test String 1", true, 24.66));
         searchResultRows.add(searchResultRow("test String 2", true, 0.25));
         searchResultRows.add(searchResultRow("test String 3", false, 100.99));
@@ -105,7 +111,7 @@ public class SearchSDKServicesTest extends AbstractServiceTest {
         when(restTemplate.postForObject(any(String.class), any(Object.class), eq(SearchResult.class)))
                 .thenReturn(searchResult);
 
-        String url = getClient().getSdkService().getRestitutionBaseUri().path(BASIC_SEARCH_PATH).build().toString();
+        String url = client.getSdkService().getRestitutionBaseUri().path(BASIC_SEARCH_PATH).build().toString();
         assertThat(url, is(equalTo(format("https://%s:443/api/v3/search/basic", HOST))));
         ResultSet testSearchResultSet = searchClient.search(query);
 
@@ -131,7 +137,7 @@ public class SearchSDKServicesTest extends AbstractServiceTest {
         // Mock Call to POST Search
         when(restTemplate.postForObject(any(String.class), any(Object.class), eq(SearchResult.class))).thenReturn(null);
 
-        String url = getClient().getSdkService().getRestitutionBaseUri().path(BASIC_SEARCH_PATH).build().toString();
+        String url = client.getSdkService().getRestitutionBaseUri().path(BASIC_SEARCH_PATH).build().toString();
         assertThat(url, is(equalTo(format("https://%s:443/api/v3/search/basic", HOST))));
         ResultSet testSearchResultSet = searchClient.search(query);
 
@@ -145,7 +151,7 @@ public class SearchSDKServicesTest extends AbstractServiceTest {
         when(restTemplate.postForObject(any(String.class), any(Object.class), eq(SearchResult.class)))
                 .thenReturn(searchResult);
 
-        String url = getClient().getSdkService().getRestitutionBaseUri().path(BASIC_SEARCH_PATH).build().toString();
+        String url = client.getSdkService().getRestitutionBaseUri().path(BASIC_SEARCH_PATH).build().toString();
         assertThat(url, is(equalTo(format("https://%s:443/api/v3/search/basic", HOST))));
         ResultSet testSearchResultSet = searchClient.search(query);
 
@@ -177,7 +183,7 @@ public class SearchSDKServicesTest extends AbstractServiceTest {
         when(restTemplate.exchange(any(String.class), eq(HttpMethod.GET), any(HttpEntity.class), eq(List.class)))
                 .thenReturn(httpResponse);
 
-        final String url = getClient().getSdkService().getRestitutionBaseUri().path(DATASETS_SEARCH_PATH)
+        final String url = client.getSdkService().getRestitutionBaseUri().path(DATASETS_SEARCH_PATH)
                                       .build().toString();
 
         assertThat(url, is(equalTo(format("https://%s:443/api/v3/search/datasets", HOST))));
@@ -195,7 +201,7 @@ public class SearchSDKServicesTest extends AbstractServiceTest {
         when(restTemplate.exchange(any(String.class), eq(HttpMethod.GET), any(HttpEntity.class), eq(List.class)))
                 .thenReturn(httpResponse);
 
-        final String url = getClient().getSdkService().getRestitutionBaseUri().path(DATASETS_SEARCH_PATH)
+        final String url = client.getSdkService().getRestitutionBaseUri().path(DATASETS_SEARCH_PATH)
                                       .build().toString();
 
         assertThat(url, is(equalTo(format("https://%s:443/api/v3/search/datasets", HOST))));
