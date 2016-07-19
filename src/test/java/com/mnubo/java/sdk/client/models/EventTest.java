@@ -51,7 +51,6 @@ public class EventTest {
         assertTrue(event.getObject().getOwnerUserName() == null);
         assertTrue(event.getObject().getOwner() == null);
         assertTrue(event.getObject().getAttributes().size() == 0);
-        assertTrue(event.getObject().getEventId() == null);
         assertTrue(event.getObject().getObjectId() == null);
         assertTrue(event.getObject().getRegistrationDate() == null);
     }

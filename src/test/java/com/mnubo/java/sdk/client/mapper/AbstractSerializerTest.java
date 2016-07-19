@@ -25,7 +25,6 @@ public abstract class AbstractSerializerTest {
         put("2012-01-31T23:59:59.999", true);
         put("2012-01-31T23:59:59.979+02:00", true);
     }};
-    protected ObjectMapper mapper = ObjectMapperConfig.getObjectMapper();
 
     protected String formatDate(DateTime date) {
         return date.withZone(DateTimeZone.UTC).toString();

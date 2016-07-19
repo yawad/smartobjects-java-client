@@ -1,49 +1,164 @@
 package com.mnubo.java.sdk.client.services;
 
-import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
-import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import org.junit.Before;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mnubo.java.sdk.client.Consumer;
+import com.mnubo.java.sdk.client.LocalRestServer;
+import com.mnubo.java.sdk.client.config.MnuboSDKConfig;
+import lombok.SneakyThrows;
+import lombok.val;
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.junit.rules.ExpectedException;
+import org.restlet.Response;
+import org.restlet.Restlet;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Status;
 
 import com.mnubo.java.sdk.client.models.SmartObject;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.models.result.Result.ResultStates;
 import com.mnubo.java.sdk.client.spi.ObjectsSDK;
+import org.springframework.web.client.RestTemplate;
 
-public class ObjectsSDKServicesTest extends AbstractServiceTest {
-    private ObjectsSDK objectClient;
+public class ObjectsSDKServicesTest {
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
 
-    protected static ResponseEntity httpResponse = mock(ResponseEntity.class);
+    private static final ObjectMapper jsonParser = new ObjectMapper();
+    private static final LocalRestServer server = new LocalRestServer(new Consumer<LocalRestServer.LocalRestContext>() {
+        @Override
+        public void accept(LocalRestServer.LocalRestContext ctx) {
+            Restlet createOrUpdateObjectRoute = new Restlet(ctx.restletContext) {
+                @Override
+                @SneakyThrows
+                public void handle(org.restlet.Request request, Response response) {
+                    if (request.getMethod().equals(Method.POST)) {
+                        val input = jsonParser.readTree(request.getEntityAsText());
+                        if (input.isObject() && input.get("x_device_id").isTextual()) {
+                            response.setEntity(String.format("{\"x_device_id\":\"%s\"}", input.get("x_device_id").asText()), MediaType.APPLICATION_JSON);
+                        } else {
+                            response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+                            response.setEntity("Oops", MediaType.TEXT_PLAIN);
+                        }
+                    }
+                    else if (request.getMethod().equals(Method.PUT)) {
+                        val input = jsonParser.readTree(request.getEntityAsText());
 
-    @Before
-    public void objectSetup() {
-        objectClient = getClient().getObjectClient();
+                        boolean first = true;
+                        val resVal = new StringBuilder("[");
+                        for(JsonNode item: input) {
+                            if (!first) {
+                                resVal.append(",");
+                            }
 
-        Result[] resultsMockSetup = {
-                new Result("idObjectTest1", ResultStates.success, "", false),
-                new Result("idObjectResult2", ResultStates.error, "Invalid attribute X for the Object", false),
-                new Result("idObjectTest3", ResultStates.success, "", false),
-                new Result("idObjectTest4", ResultStates.error, "Error Y", false)
-        };
+                            final String deviceId = item.get("x_device_id").asText();
+                            resVal
+                                    .append("{\"id\":\"")
+                                    .append(deviceId)
+                                    .append("\",\"result\":\"")
+                                    .append(!deviceId.equals("deviceId2") ? "success": "error")
+                                    .append("\"")
+                                    .append(",\"message\":\"")
+                                    .append(deviceId.equals("deviceId2") ? "Invalid attribute X for the Object": "")
+                                    .append("\"")
+                                    .append("}");
+                            first = false;
+                        }
+                        resVal.append("]");
+                        response.setEntity(resVal.toString(), MediaType.APPLICATION_JSON);
+                    }
+                    else {
+                        response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
+                    }
+                }
+            };
 
-        // Mock Call PUT Objects
-        when(httpResponse.getBody()).thenReturn(resultsMockSetup);
-        when(restTemplate.exchange(any(String.class), eq(HttpMethod.PUT), any(HttpEntity.class), eq(Result[].class)))
-                         .thenReturn(httpResponse);
+            Restlet deleteOrUpdateObjectRoute = new Restlet(ctx.restletContext) {
+                @Override
+                @SneakyThrows
+                public void handle(org.restlet.Request request, Response response) {
+                    if (request.getMethod().equals(Method.DELETE) || request.getMethod().equals(Method.PUT)) {
+                        response.setEntity("Ok", MediaType.TEXT_PLAIN);
+                    }
+                    else {
+                        response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
+                    }
+                }
+            };
+
+            Restlet objectExistsRoute = new Restlet(ctx.restletContext) {
+                @Override
+                @SneakyThrows
+                public void handle(org.restlet.Request request, Response response) {
+                    if (request.getMethod().equals(Method.POST)) {
+                        val input = jsonParser.readTree(request.getEntityAsText());
+                        val resVal = new StringBuilder("[");
+                        boolean first = true;
+                        for(JsonNode item: input) {
+                            if (!first) {
+                                resVal.append(",");
+                            }
+
+                            resVal
+                                    .append("{\"")
+                                    .append(item.asText())
+                                    .append("\":")
+                                    .append(item.asText().equals("deviceId1") ? "true" : "false")
+                                    .append("}");
+
+                            first = false;
+                        }
+                        resVal.append("]");
+                        response.setEntity(resVal.toString(), MediaType.APPLICATION_JSON);
+                    }
+                    else {
+                        response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
+                    }
+
+                }
+            };
+
+            Restlet oauthRoute = new Restlet(ctx.restletContext) {
+                @Override
+                @SneakyThrows
+                public void handle(org.restlet.Request request, Response response) {
+                    response.setEntity("{\"access_token\":\"thetoken\",\"token_type\":\"client\",\"expires_in\":1000000,\"scope\":\"ALL\"}", MediaType.APPLICATION_JSON);
+                }
+            };
+
+            ctx.router.attach(ctx.baseUrl + "/api/v3/objects", createOrUpdateObjectRoute);
+            ctx.router.attach(ctx.baseUrl + "/api/v3/objects/exists", objectExistsRoute);
+            ctx.router.attach(ctx.baseUrl + "/api/v3/objects/deviceId1", deleteOrUpdateObjectRoute);
+            ctx.router.attach(ctx.baseUrl + "/oauth/token", oauthRoute);
+        }
+    });
+
+    private static final MnuboSDKConfig config = MnuboSDKConfig
+            .builder()
+            .withHostName(server.host)
+            .withIngestionPort(Integer.toString(server.port))
+            .withAuthenticationPort(Integer.toString(server.port))
+            .withSecurityConsumerKey("ABC")
+            .withSecurityConsumerSecret("ABC")
+            .withHttpProtocol("http")
+            .build();
+    private static final RestTemplate restTemplate = new HttpRestTemplate(config).getRestTemplate();
+    private static final CredentialHandler credentials = new CredentialHandler(config, restTemplate);
+    private static final SDKService sdkService = new SDKService(restTemplate, credentials, config);
+    private static final ObjectsSDK objectsClient = new ObjectsSDKServices(sdkService);
+
+    @AfterClass
+    public static void classTearDown() throws Exception {
+        server.close();
     }
 
     @Test
@@ -51,11 +166,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         SmartObject object = SmartObject.builder().withObjectType("type").withDeviceId("device").build();
 
-        String url = getClient().getSdkService().getIngestionBaseUri().path(OBJECT_PATH).build().toString();
-
-        assertThat(url, is(equalTo(format("https://%s:443/api/v3/objects",HOST))));
-
-        objectClient.create(object);
+        objectsClient.create(object);
     }
 
     @Test
@@ -63,7 +174,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Object body cannot be null.");
-        objectClient.create(null);
+        objectsClient.create(null);
     }
 
     @Test
@@ -73,7 +184,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("x_object_Type cannot be blank.");
-        objectClient.create(object);
+        objectsClient.create(object);
     }
 
     @Test
@@ -83,7 +194,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("x_object_Type cannot be blank.");
-        objectClient.create(object);
+        objectsClient.create(object);
     }
 
     @Test
@@ -93,7 +204,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("x_device_Id cannot be blank.");
-        objectClient.create(object);
+        objectsClient.create(object);
     }
 
     @Test
@@ -103,20 +214,12 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("x_device_Id cannot be blank.");
-        objectClient.create(object);
+        objectsClient.create(object);
     }
 
     @Test
     public void deleteObjectThenOk() {
-
-        String deviceId = "deviceId";
-
-        final String url = getClient().getSdkService().getIngestionBaseUri().path(OBJECT_PATH).pathSegment(deviceId)
-                .build().toString();
-
-        assertThat(url, is(equalTo(format("https://%s:443/api/v3/objects/%s",HOST, deviceId))));
-
-        objectClient.delete(deviceId);
+        objectsClient.delete("deviceId1");
     }
 
     @Test
@@ -126,7 +229,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("device_Id cannot be blank.");
-        objectClient.delete(deviceId);
+        objectsClient.delete(deviceId);
     }
 
     @Test
@@ -136,20 +239,12 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("device_Id cannot be blank.");
-        objectClient.delete(deviceId);
+        objectsClient.delete(deviceId);
     }
 
     @Test
     public void updateObjectThenOk() {
-
-        String deviceId = "deviceId";
-
-        final String url = getClient().getSdkService().getIngestionBaseUri().path(OBJECT_PATH).pathSegment(deviceId)
-                .build().toString();
-
-        assertThat(url, is(equalTo(format("https://%s:443/api/v3/objects/%s",HOST, deviceId))));
-
-        objectClient.update(SmartObject.builder().build(), deviceId);
+        objectsClient.update(SmartObject.builder().build(), "deviceId1");
     }
 
     @Test
@@ -159,7 +254,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("device_Id cannot be blank.");
-        objectClient.update(SmartObject.builder().withDeviceId(null).build(), deviceId);
+        objectsClient.update(SmartObject.builder().withDeviceId(null).build(), deviceId);
     }
 
     @Test
@@ -169,7 +264,7 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("device_Id cannot be blank.");
-        objectClient.update(SmartObject.builder().withDeviceId("").build(), deviceId);
+        objectsClient.update(SmartObject.builder().withDeviceId("").build(), deviceId);
     }
 
     @Test
@@ -179,52 +274,87 @@ public class ObjectsSDKServicesTest extends AbstractServiceTest {
 
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Object body cannot be null.");
-        objectClient.update(null, deviceId);
+        objectsClient.update(null, deviceId);
     }
 
     @Test
     public void createUpdateThenOk() {
 
         List<SmartObject> objects = new ArrayList<>();
-        objects.add(SmartObject.builder().withObjectType("type").withDeviceId("device1").build());
-        objects.add(SmartObject.builder().withObjectType("type").withDeviceId("device2").build());
-        objects.add(SmartObject.builder().withObjectType("type").withDeviceId("device3").build());
-        objects.add(SmartObject.builder().withObjectType("type").withDeviceId("device4").build());
+        objects.add(SmartObject.builder().withObjectType("type").withDeviceId("deviceId1").build());
+        objects.add(SmartObject.builder().withObjectType("type").withDeviceId("deviceId2").build());
+        objects.add(SmartObject.builder().withObjectType("type").withDeviceId("deviceId3").build());
 
-        String url = getClient().getSdkService().getIngestionBaseUri().path(OBJECT_PATH).build().toString();
-
-        assertThat(url, is(equalTo(format("https://%s:443/api/v3/objects", HOST))));
-
-        List<Result> results = objectClient.createUpdate(objects);
+        List<Result> results = objectsClient.createUpdate(objects);
 
         validateResult(results);
     }
 
     @Test
     public void createUpdateWithVarargThenOk() {
-        SmartObject smartObject = SmartObject.builder().withObjectType("type").withDeviceId("device1").build();
+        SmartObject smartObject = SmartObject.builder().withObjectType("type").withDeviceId("deviceId1").build();
 
-        List<Result> results = objectClient.createUpdate(smartObject);
+        List<Result> results = objectsClient.createUpdate(smartObject);
 
-        validateResult(results);
+        validateOneResult(results);
+    }
+
+    @Test
+    public void existObjectThenOk() {
+        assertThat(objectsClient.objectExists("deviceId1"), is(equalTo(true)));
+    }
+
+    @Test
+    public void existObjectDeviceIdNullThenFail() {
+        String deviceId = null;
+
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("deviceId cannot be blank.");
+        objectsClient.objectExists(deviceId);
+    }
+
+    @Test
+    public void existObjectsThenOk() {
+        List<String> deviceIds = Arrays.asList("deviceId1", "deviceId2");
+
+        Map<String, Boolean> expected = new LinkedHashMap<String, Boolean>(){{
+            put("deviceId1", true);
+            put("deviceId2", false);
+        }};
+
+        assertThat(objectsClient.objectsExist(deviceIds), is(equalTo(expected)));
+    }
+
+    @Test
+    public void existObjectsDeviceIdNullThenFail() {
+        List<String> deviceId = null;
+
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("List of the deviceIds cannot be null.");
+        objectsClient.objectsExist(deviceId);
     }
 
     private void validateResult(List<Result> results) {
-        assertThat(results.size(), equalTo(4));
+        assertThat(results.size(), equalTo(3));
 
-        assertThat(results.get(0).getId(), equalTo("idObjectTest1"));
-        assertThat(results.get(1).getId(), equalTo("idObjectResult2"));
-        assertThat(results.get(2).getId(), equalTo("idObjectTest3"));
-        assertThat(results.get(3).getId(), equalTo("idObjectTest4"));
+        assertThat(results.get(0).getId(), equalTo("deviceId1"));
+        assertThat(results.get(1).getId(), equalTo("deviceId2"));
+        assertThat(results.get(2).getId(), equalTo("deviceId3"));
 
         assertThat(results.get(0).getResult(), equalTo(ResultStates.success));
         assertThat(results.get(1).getResult(), equalTo(ResultStates.error));
         assertThat(results.get(2).getResult(), equalTo(ResultStates.success));
-        assertThat(results.get(3).getResult(), equalTo(ResultStates.error));
 
         assertThat(results.get(0).getMessage(), equalTo(""));
         assertThat(results.get(1).getMessage(), equalTo("Invalid attribute X for the Object"));
         assertThat(results.get(2).getMessage(), equalTo(""));
-        assertThat(results.get(3).getMessage(), equalTo("Error Y"));
+    }
+
+    private void validateOneResult(List<Result> results) {
+        assertThat(results.size(), equalTo(1));
+
+        assertThat(results.get(0).getId(), equalTo("deviceId1"));
+        assertThat(results.get(0).getResult(), equalTo(ResultStates.success));
+        assertThat(results.get(0).getMessage(), equalTo(""));
     }
 }

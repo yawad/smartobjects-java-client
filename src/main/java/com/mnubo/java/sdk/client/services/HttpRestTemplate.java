@@ -28,7 +28,7 @@ class HttpRestTemplate {
         HttpClient httpClient = getHttpClient(config);
         ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
         restTemplate = new RestTemplate(requestFactory);
-        configureMapper(ObjectMapperConfig.getObjectMapper());
+        configureMapper(ObjectMapperConfig.genericObjectMapper);
     }
 
     private void configureMapper(ObjectMapper objectMapper) {

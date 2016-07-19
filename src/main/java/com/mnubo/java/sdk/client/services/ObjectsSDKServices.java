@@ -1,17 +1,21 @@
 package com.mnubo.java.sdk.client.services;
 
-import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
-import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
-import static java.util.Arrays.*;
-
-import java.util.*;
-
+import com.mnubo.java.sdk.client.mapper.ObjectMapperConfig;
+import com.mnubo.java.sdk.client.mapper.StringExistsResultDeserializer;
 import com.mnubo.java.sdk.client.models.SmartObject;
 import com.mnubo.java.sdk.client.models.result.Result;
 import com.mnubo.java.sdk.client.spi.ObjectsSDK;
 
+import java.io.IOException;
+import java.util.*;
+
+import static com.mnubo.java.sdk.client.Constants.OBJECT_PATH;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
+import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
+import static java.util.Arrays.asList;
+
 class ObjectsSDKServices implements ObjectsSDK {
+    private static final String OBJECT_PATH_EXITS = OBJECT_PATH + "/exists";
 
     private final SDKService sdkCommonServices;
 
@@ -74,4 +78,31 @@ class ObjectsSDKServices implements ObjectsSDK {
         return createUpdate(asList(objects));
     }
 
+    @Override
+    public Map<String, Boolean> objectsExist(List<String> deviceIds) {
+        validNotNull(deviceIds, "List of the deviceIds cannot be null.");
+
+        final String url = sdkCommonServices.getIngestionBaseUri()
+                .path(OBJECT_PATH_EXITS)
+                .build().toString();
+
+        String unparsed = sdkCommonServices.postRequest(url, String.class, deviceIds);
+
+        try {
+            return ObjectMapperConfig.stringExistsObjectMapper.readValue(unparsed, StringExistsResultDeserializer.targetClass);
+        }
+        catch(IOException ioe) {
+            throw new RuntimeException("Cannot deserialize server's response", ioe);
+        }
+
+    }
+
+    @Override
+    public Boolean objectExists(String deviceId) {
+        notBlank(deviceId, "deviceId cannot be blank.");
+
+        final Map<String, Boolean> subResults = objectsExist(Collections.singletonList(deviceId));
+
+        return subResults.get(deviceId);
+    }
 }

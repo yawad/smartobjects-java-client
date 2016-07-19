@@ -1,5 +1,3 @@
-# mnubo Java SDK
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -18,14 +16,22 @@
     - [Advanced Configuration](#advanced-configuration)
   - [Creating owners](#creating-owners)
   - [Updating owners](#updating-owners)
+  - [Create or update a batch of Owners](#create-or-update-a-batch-of-owners)
   - [Deleting owners](#deleting-owners)
+  - [Check if an owner exists](#check-if-an-owner-exists)
+  - [Check if a batch of owners exist](#check-if-a-batch-of-owners-exist)
   - [Claiming an object](#claiming-an-object)
   - [Creating objects](#creating-objects)
   - [Updating objects](#updating-objects)
+  - [Create or update a batch of Objects](#create-or-update-a-batch-of-objects)
   - [Deleting objects](#deleting-objects)
+  - [Check if an object exists](#check-if-an-object-exists)
+  - [Check if a batch of objects exist](#check-if-a-batch-of-objects-exist)
   - [Sending Events](#sending-events)
         - [To send multiple events to a single object:](#to-send-multiple-events-to-a-single-object)
     - [To send multiple events to multiple objects:](#to-send-multiple-events-to-multiple-objects)
+  - [Check if an event exists](#check-if-an-event-exists)
+  - [Check if a batch of events exist](#check-if-a-batch-of-events-exist)
   - [Searching](#searching)
     - [Sending search query](#sending-search-query)
   - [Retrieving datasets](#retrieving-datasets)
@@ -35,12 +41,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+# mnubo Java SDK
 
-
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mnubo/java-sdk-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.mnubo/java-sdk-client)
 
 Introduction
 ============
-
 This is a Java opinionated version of the original [API documentation](https://sop.mtl.mnubo.com/apps/doc/?i=t).
 
 Architecture
@@ -64,15 +70,9 @@ Include the mnubo client in your Java application using:
 
 Maven
 -----
-Add the following into your pom.xml:
-```
-<dependency>
-    <groupId>com.mnubo</groupId>
-    <artifactId>java-sdk-client</artifactId>
-    <scope>compile</scope>
-    <version>1.4.1</version>
-</dependency>
-```
+You can find information about dependency to add into your Pom.xml here.
+
+https://maven-badges.herokuapp.com/maven-central/com.mnubo/java-sdk-client
 
 Download source code
 ---------------------
@@ -284,7 +284,6 @@ for(Result r: results) {
 
 Deleting owners
 ---------------
-
 This example describes how to delete an Owner:
 ```
 //Request a mnubo client using the basic method.
@@ -297,9 +296,39 @@ OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
 mnuboOwnersClient.delete( "john.smith@mycompany.com" );
 ```
 
+Check if an owner exists
+------------------------
+This example describes how to validate if an Owner exists:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Owners client interface
+OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
+
+//true if the owner exists, false if not.
+boolean doesExists = mnuboOwnersClient.ownerExists( "john.smith@mycompany.com" );
+```
+
+Check if a batch of owners exist
+--------------------------------
+This example describes how to validate if a list of Owners exists:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Owners client interface
+OwnersSDK mnuboOwnersClient = mnuboClient.getOwnerClient();
+
+Map<String, Boolean> ownersExist = mnuboOwnersClient.ownersExist( Arrays.asList("john.smith@mycompany.com", "my.test@mycompany.com") );
+//true if the owner `john.smith@mycompany.com` exists, false if not.
+boolean johnSmithExists = ownersExist.get("john.smith@mycompany.com")
+//true if the owner `my.test@mycompany.com` exists, false if not.
+boolean myTestExists = ownersExist.get("my.test@mycompany.com")
+```
+
 Claiming an object
 ------------------
-
 This example describes how to link an Object with an Owner:
 ```
 //Request a mnubo client using the basic method.
@@ -433,7 +462,7 @@ The JSON file "myObjectFile.json" is as follows:
 ```
 
 Create or update a batch of Objects
-----------------------
+-----------------------------------
 To create a batch of objects you need to:
 1. Request an ObjectSDK interface from the mnubo client instance.
 2. Build a list of objects.
@@ -495,7 +524,6 @@ for(Result r: results) {
 
 Deleting objects
 ----------------
-
 ```
 //get a mnubo client using the basic method.
 MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
@@ -505,6 +533,37 @@ ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
 
 //delete the object
 mnuboObjectClient.delete( "connect_alpha.6hv135nw00393.1234567" );
+```
+
+Check if an object exists
+-------------------------
+This example describes how to validate if an Object exists:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Object client interface
+ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
+
+//true if the object exists, false if not.
+boolean doesExists = mnuboObjectClient.objectExists( "connect_alpha.6hv135nw00393.1234567" );
+```
+
+Check if a batch of objects exist
+---------------
+This example describes how to validate if a list of Objects exists:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Object client interface
+ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
+
+Map<String, Boolean> objectsExist = mnuboObjectClient.objectsExist( Arrays.asList("connect_alpha.6hv135nw00393.1234567", "connect_beta.1234567") );
+//true if the device `connect_alpha.6hv135nw00393.1234567` exists, false if not.
+bollean deviceAExists = objectsExist.get("connect_alpha.6hv135nw00393.1234567")
+//true if the device `connect_beta.1234567` exists, false if not.
+bollean deviceBExists = objectsExist.get("connect_beta.1234567")
 ```
 
 Sending Events
@@ -732,6 +791,37 @@ for(Result r: results) {
     ResultStates resultState = r.getResult();
     String message = r.getMessage();
 }
+```
+
+Check if an event exists
+------------------------
+This example describes how to validate if an event exists:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Event client interface
+EventsSDK mnuboEventClient = mnuboClient.getEventClient();
+
+//true if the event exists, false if not.
+boolean doesExists = mnuboEventClient.eventExists( UUID.fromString("11111111-2222-1111-6666-555555555555") );
+```
+
+Check if a batch of events exist
+--------------------------------
+This example describes how to validate if a list of events exists:
+```
+//Request a mnubo client using the basic method.
+MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
+
+//get an Event client interface
+EventsSDK mnuboEventClient = mnuboClient.getEventClient();
+
+Map<String, Boolean> exists = mnuboEventClient.eventsExist( Arrays.asList(UUID.fromString("22222222-2222-2222-2222-222222222222"), UUID.fromString("11111111-1111-1111-1111-111111111111")) );
+//true if the event `22222222-2222-2222-2222-222222222222` exists, false if not.
+bollean eventA = exists.get(UUID.fromString("22222222-2222-2222-2222-222222222222"))
+//true if the event `11111111-1111-1111-1111-111111111111` exists, false if not.
+bollean eventB = exists.get(UUID.fromString("11111111-1111-1111-1111-111111111111"))
 ```
 
 Searching
