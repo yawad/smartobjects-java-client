@@ -28,7 +28,7 @@
   - [Check if an object exists](#check-if-an-object-exists)
   - [Check if a batch of objects exist](#check-if-a-batch-of-objects-exist)
   - [Sending Events](#sending-events)
-        - [To send multiple events to a single object:](#to-send-multiple-events-to-a-single-object)
+    - [To send multiple events to a single object:](#to-send-multiple-events-to-a-single-object)
     - [To send multiple events to multiple objects:](#to-send-multiple-events-to-multiple-objects)
   - [Check if an event exists](#check-if-an-event-exists)
   - [Check if a batch of events exist](#check-if-a-batch-of-events-exist)
@@ -47,20 +47,20 @@
 
 Introduction
 ============
-This is a Java opinionated version of the original [API documentation](https://sop.mtl.mnubo.com/apps/doc/?i=t).
+This is a Java implementation of the [API documentation](https://sop.mtl.mnubo.com/apps/doc/?i=t).
 
 Architecture
 ============
 Use class `MnuboSDKFactory` to get a client instance for ObjectsSDK, OwnersSDK, EventsSDK or SearchSDK.  Then the appropriate client API.
 
-Current SDK support only synchronous call.
+The current SDK only supports synchronous calls.
 
 
 Prerequisites
 =============
 
-- Using this java SDK required JAVA 1.7 or higher.
-- The SDK has been built build maven 3.2.3.
+- Using this java SDK requires JAVA 1.7 or higher.
+- The SDK has been built with maven 3.2.3.
 
 
 Installation & Configuration
@@ -70,7 +70,7 @@ Include the mnubo client in your Java application using:
 
 Maven
 -----
-You can find information about dependency to add into your Pom.xml here.
+You can find information about dependencies to add into your Pom.xml here.
 
 https://maven-badges.herokuapp.com/maven-central/com.mnubo/java-sdk-client
 
@@ -91,12 +91,12 @@ Usage
 
 Getting a "MnuboSDKClient" (client) instance
 --------------------------------------------
-To get a client instance use the **"MnuboSDKFactory" Class**. Note that you only need one client instance. We provide multithreading support and a pool of connection.
+To get a client instance use the **"MnuboSDKFactory" Class**. Note that you only need one client instance. We provide multithread support and a pool of connections.
 
 There are two ways to obtain a client instance:
 
 ### Basic Configuration
-Using the basic method three mandatory parameters are required – Host, consumer key and consumer secret. Please see the example below:
+Using the basic method, three mandatory parameters are required – Host, consumer key and consumer secret. Please see the example below:
 
 
 ```
@@ -229,9 +229,9 @@ Create or update a batch of Owners
 ---------------
 To create a batch of owners you need to:
 1. Request an OwnersSDK interface using the mnubo client instance.
-2. Build a list of owner.
+2. Build a list of Owners.
 
-This example describes how to create a batch of Owner:
+This example describes how to create a batch of Owners:
 ```
 //Request a mnubo client using the basic method.
 MnuboSDKClient mnuboClient = MnuboSDKFactory.getClient( HOST , CONSUMER_KEY , CONSUMER_SECRET );
@@ -250,7 +250,7 @@ owners.add(Owner.builder()
                 .withAddedAttribute("gender", "male")
                 .withAddedAttribute("height", 1.80)
                 .build());
-                
+
 owners.add(Owner.builder()
                 .withUsername("user2@mycompany.com")
                 .withPassword("ewor$@$!@fqrq")
@@ -259,7 +259,7 @@ owners.add(Owner.builder()
                 .withAddedAttribute("gender", "male")
                 .withAddedAttribute("height", 1.75)
                 .build());
-                
+
 // A single batch can contain up to 1000 Owners
 
 //create the list of owners
@@ -268,8 +268,8 @@ List<Result> results = mnuboOwnersClient.createUpdate( owners );
 
 You can verify if there is any error(s) for the list of owners created / updated.
 
-The API result will contain a list of the “username”s (id), their results (“success” or “error”)
-and the message if there is an error.
+The API result will contain a list of the username's (id), their results (“success” or “error”)
+and a message if an error occurred.
 
 Note: ResultStates is an ENUM with only ResultStates.success (“success”) or ResultStates.error (“error”)
 
@@ -412,7 +412,8 @@ Updating objects
 To update an object:
 1. Request an ObjectSDK interface from the mnubo client instance.
 2. Build an object with parameters to change.
-3. Note that an owner cannot be added during update
+
+Note: that an owner cannot be added when updating an object.
 
 ```
 //get a mnubo client using the basic method.
@@ -488,7 +489,7 @@ objects.add(SmartObject.builder()
                        .withAddedAttribute("siteid", "6hv135nw00393")
                        .withAddedAttribute("site_description", "My connected House 1")
                        .build());
-                       
+
 objects.add(SmartObject.builder()
                        .withDeviceId("connect_beta.7hv234nw60696.7654321")
                        .withObjectType("gateway")
@@ -499,7 +500,7 @@ objects.add(SmartObject.builder()
                        .withAddedAttribute("siteid", "7hv234nw60696")
                        .withAddedAttribute("site_description", "My connected House 2")
                        .build());
-                       
+
 // A single batch can contain up to 1000 Objects
 
 // Create the list of objects
@@ -508,8 +509,8 @@ List<Result> results = mnuboObjectClient.createUpdate( objects );
 ```
 You can verify if there is any error(s) for the list of owners created / updated.
 
-The API result will contain a list of the “x_device_id”s (id), their results (“success” or “error”)
-and the message if there is an error.
+The API result will contain a list of the x_device_id's (id), their results (“success” or “error”)
+and a message if an error occurreds.
 
 Note: ResultStates is an ENUM with only ResultStates.success (“success”) or ResultStates.error (“error”)
 
@@ -561,9 +562,9 @@ ObjectsSDK mnuboObjectClient = mnuboClient.getObjectClient();
 
 Map<String, Boolean> objectsExist = mnuboObjectClient.objectsExist( Arrays.asList("connect_alpha.6hv135nw00393.1234567", "connect_beta.1234567") );
 //true if the device `connect_alpha.6hv135nw00393.1234567` exists, false if not.
-bollean deviceAExists = objectsExist.get("connect_alpha.6hv135nw00393.1234567")
+boolean deviceAExists = objectsExist.get("connect_alpha.6hv135nw00393.1234567")
 //true if the device `connect_beta.1234567` exists, false if not.
-bollean deviceBExists = objectsExist.get("connect_beta.1234567")
+Boolean deviceBExists = objectsExist.get("connect_beta.1234567")
 ```
 
 Sending Events
@@ -819,9 +820,9 @@ EventsSDK mnuboEventClient = mnuboClient.getEventClient();
 
 Map<String, Boolean> exists = mnuboEventClient.eventsExist( Arrays.asList(UUID.fromString("22222222-2222-2222-2222-222222222222"), UUID.fromString("11111111-1111-1111-1111-111111111111")) );
 //true if the event `22222222-2222-2222-2222-222222222222` exists, false if not.
-bollean eventA = exists.get(UUID.fromString("22222222-2222-2222-2222-222222222222"))
+boolean eventAExists = exists.get(UUID.fromString("22222222-2222-2222-2222-222222222222"))
 //true if the event `11111111-1111-1111-1111-111111111111` exists, false if not.
-bollean eventB = exists.get(UUID.fromString("11111111-1111-1111-1111-111111111111"))
+boolean eventBExists = exists.get(UUID.fromString("11111111-1111-1111-1111-111111111111"))
 ```
 
 Searching
@@ -872,17 +873,17 @@ List<ColumnDefinition> columnsFromRow = searchRows.get(0).getColumnDefinitions()
 
         // Get Column Definitions for the Search Row
         List<ColumnDefinition> columnDefinitions = searchRow.getColumnDefinitions();
-        
+
         // You need to find the data type (primitive type) to get the corresponding value
         for (ColumnDefinition columnDefinition : columnDefinitions) {
             String datatype = columnDefinition.getPrimitiveType();
         }
-        
+
         // Get data of the row for a specific column :
         // The search Row method use the primitive type (not the High Level Type)
         // For example if the primitive type is "STRING" and we want the data of the column "column1":
         String stringData = searchRow.getString("column1");
-        
+
         // Other Example with when primitive type is "DOUBLE" and we want the data of the column "column2":
         Double doubleData = searchRow.getDouble("column2");
     }
@@ -891,7 +892,7 @@ List<ColumnDefinition> columnsFromRow = searchRows.get(0).getColumnDefinitions()
 Retrieving datasets
 -------------------
 To Get the datasets:
-1. Request an SearchSDK interface using the mnubo client instance.
+1. Request a SearchSDK interface using the mnubo client instance.
 
 This example describes how to create an request to get the DataSets:
 ```
@@ -912,7 +913,7 @@ You can use the data return by the Basic Search Query.
         String datasetDescription = dataset.getDescription();
         String datasetDisplayName = dataset.getDisplayName();
         String datasetKey = dataset.getKey();
-        
+
         for(Field field: dataset.getFields()) {
             String containerType = field.getContainerType();
             String fieldDescription = field.getDescription();
