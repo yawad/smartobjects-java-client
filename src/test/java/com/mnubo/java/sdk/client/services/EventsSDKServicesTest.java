@@ -32,6 +32,7 @@ public class EventsSDKServicesTest {
     private static final UUID eventId1 = UUID.randomUUID();
     private static final UUID eventId2 = UUID.randomUUID();
     private static final UUID eventId3 = UUID.randomUUID();
+    private static final UUID eventId4 = UUID.randomUUID();
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
@@ -58,10 +59,10 @@ public class EventsSDKServicesTest {
                                     .append("{\"id\":\"")
                                     .append(item.get("event_id").asText())
                                     .append("\",\"result\":\"")
-                                    .append(deviceId.equals("deviceId1") ? "success": "error")
+                                    .append(deviceId.equals("deviceId1") ? "success": (deviceId.equals("deviceId3") ? "conflict": (deviceId.equals("deviceId2") ? "notfound": "error")))
                                     .append("\"")
                                     .append(",\"message\":\"")
-                                    .append(deviceId.equals("deviceId2") ? "Object for the Event doesn't exist": (deviceId.equals("deviceId3") ? "Other error for test" : ""))
+                                    .append(deviceId.equals("deviceId2") ? "Object for the Event doesn't exist": (deviceId.equals("deviceId1") ? "": "Simple error"))
                                     .append("\"")
                                     .append("}");
 
@@ -148,6 +149,7 @@ public class EventsSDKServicesTest {
             add(Event.builder().withEventID(eventId1).withEventType("type").withSmartObject("deviceId1").build());
             add(Event.builder().withEventID(eventId2).withEventType("type").withSmartObject("deviceId2").build());
             add(Event.builder().withEventID(eventId3).withEventType("type").withSmartObject("deviceId3").build());
+            add(Event.builder().withEventID(eventId4).withEventType("type").withSmartObject("deviceId4").build());
         }};
 
         List<Result> results = eventsClient.send(events);
@@ -229,19 +231,22 @@ public class EventsSDKServicesTest {
     }
 
     private void validateResult(List<Result> results) {
-        assertThat(results.size(), equalTo(3));
+        assertThat(results.size(), equalTo(4));
 
         assertThat(results.get(0).getId(), equalTo(eventId1.toString()));
         assertThat(results.get(1).getId(), equalTo(eventId2.toString()));
         assertThat(results.get(2).getId(), equalTo(eventId3.toString()));
+        assertThat(results.get(3).getId(), equalTo(eventId4.toString()));
 
         assertThat(results.get(0).getResult(), equalTo(ResultStates.success));
-        assertThat(results.get(1).getResult(), equalTo(ResultStates.error));
-        assertThat(results.get(2).getResult(), equalTo(ResultStates.error));
+        assertThat(results.get(1).getResult(), equalTo(ResultStates.notfound));
+        assertThat(results.get(2).getResult(), equalTo(ResultStates.conflict));
+        assertThat(results.get(3).getResult(), equalTo(ResultStates.error));
 
         assertThat(results.get(0).getMessage(), equalTo(""));
         assertThat(results.get(1).getMessage(), equalTo("Object for the Event doesn't exist"));
-        assertThat(results.get(2).getMessage(), equalTo("Other error for test"));
+        assertThat(results.get(2).getMessage(), equalTo("Simple error"));
+        assertThat(results.get(3).getMessage(), equalTo("Simple error"));
     }
 
     private void validateOneResult(List<Result> results) {

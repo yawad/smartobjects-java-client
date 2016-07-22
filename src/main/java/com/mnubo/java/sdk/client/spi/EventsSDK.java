@@ -41,7 +41,7 @@ public interface EventsSDK {
      */
     List<Result> send(Event... events);
 
-        /**
+    /**
      * Check if events with the given ids exists
      * @param eventIds The list of event Ids to check if exists. ["8bcece4c-b449-4229-8c7a-6d21aaff6a6f", "05a2f92d-8475-4b8b-a188-5452d1a5933"]
      * @return The list of event ids with an existing boolean, true if it exists, false if it does not exist. [{"8bcece4c-b449-4229-8c7a-6d21aaff6a6f": false}, {"05a2f92d-8475-4b8b-a188-5452d1a5933": true}]. Map is ordered, keys are sorted in the same order as the given event ids.
