@@ -5,7 +5,6 @@
 ### Features
 
 * **POST /api/v3/events:** this API does not allow anymore to overwrite an existing event
-* **PUT /api/v3/events:** new endpoint to update existing event content
 * **POST /api/v3/events/exists:** new endpoint to check the existence of a list of events
 * **GET /api/v3/events/exists/{event_id}:** new endpoint to check the existence of a specific event
 * **POST /api/v3/objects/exists:** new endpoint to check the existence of a list of objects
