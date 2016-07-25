@@ -1,3 +1,11 @@
+<a name="1.7.7"></a>
+
+# [1.7.7](https://github.com/mnubo/mnubo-java-sdk/compare/v1.7.6...v1.7.7) (2016-07-25)
+
+### Features
+
+* **POST /api/v3/events:** support for 'conflict' and 'notfound' error codes
+
 <a name="1.7.6"></a>
 
 # [1.7.6](https://github.com/mnubo/mnubo-java-sdk/compare/v1.7.5...v1.7.6) (2016-07-21)
