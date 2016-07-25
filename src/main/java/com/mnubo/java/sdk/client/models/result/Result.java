@@ -14,8 +14,10 @@ public final class Result {
      */
     public enum ResultStates {
 
-        success("success"), 
-        error("error");
+        success("success"),
+        error("error"),
+        notfound("notfound"),
+        conflict("conflict");
 
         private final String resultState;
 

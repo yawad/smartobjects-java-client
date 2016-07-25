@@ -43,7 +43,6 @@ class EventsSDKServices implements EventsSDK {
 
     @Override
     public List<Result> send(List<Event> events) {
-
         notNullNorEmpty(events, "Event list cannot be null or empty.");
 
         final String url = sdkCommonServices.getIngestionBaseUri()
@@ -56,7 +55,6 @@ class EventsSDKServices implements EventsSDK {
 
     @Override
     public List<Result> send(Event... events) {
-
         return send(asList(events));
     }
 
