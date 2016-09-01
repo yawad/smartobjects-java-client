@@ -77,12 +77,18 @@ class EventsSDKServices implements EventsSDK {
     }
 
     @Override
-    public Boolean isEventExists(UUID eventId) {
+    public Boolean eventExists(UUID eventId) {
         validNotNull(eventId, "eventId cannot be blank.");
 
         final Map<UUID, Boolean> subResults = eventsExist(Collections.singletonList(eventId));
 
         return subResults.get(eventId);
+    }
+
+    @Override
+    @Deprecated
+    public Boolean isEventExists(UUID eventId) {
+        return eventExists(eventId);
     }
 
     private List<Result> postRequest(String url, Object object) {

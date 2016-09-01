@@ -53,5 +53,11 @@ public interface EventsSDK {
      * @param eventId The event Id to check if exists. "eventA"
      * @return Existing boolean value. false
      */
+    Boolean eventExists(UUID eventId);
+
+    /**
+     * @deprecated Please use `eventExists(eventId)` instead. Will be removed in a future version
+     */
+    @Deprecated
     Boolean isEventExists(UUID eventId);
 }

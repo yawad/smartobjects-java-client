@@ -259,15 +259,15 @@ public class EventsSDKServicesTest {
 
     @Test
     public void eventExistsThenOk() {
-        assertThat(eventsClient.isEventExists(UUID.randomUUID()), is(equalTo(false)));
-        assertThat(eventsClient.isEventExists(eventId1), is(equalTo(true)));
+        assertThat(eventsClient.eventExists(UUID.randomUUID()), is(equalTo(false)));
+        assertThat(eventsClient.eventExists(eventId1), is(equalTo(true)));
     }
 
     @Test
     public void eventExistsEventIdNullThenFail() {
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("eventId cannot be blank.");
-        eventsClient.isEventExists(null);
+        eventsClient.eventExists(null);
     }
 
     @Test
