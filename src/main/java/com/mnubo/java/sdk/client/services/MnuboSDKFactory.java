@@ -1,21 +1,6 @@
 package com.mnubo.java.sdk.client.services;
 
-import static com.mnubo.java.sdk.client.Constants.AUTHENTICATION_PORT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_BASE_PATH;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECTION_REQUEST_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DEFAULT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_AUTOMATIC_RETRIES;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_REDIRECT_HANDLING;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_CONNECTIONS_PER_ROUTE;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_TOTAL_CONNECTION;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_SOCKET_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.HOST_NAME;
-import static com.mnubo.java.sdk.client.Constants.HTTP_PROTOCOL;
-import static com.mnubo.java.sdk.client.Constants.INGESTION_PORT;
-import static com.mnubo.java.sdk.client.Constants.RESTITUTION_PORT;
-import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_KEY;
-import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_SECRET;
+import static com.mnubo.java.sdk.client.Constants.*;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.notBlank;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validIsFile;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.validNotNull;
@@ -46,6 +31,7 @@ public abstract class MnuboSDKFactory {
      * <b>client.config.autentication-port</b>: 443.
      * <b>client.http.client.disable-redirect-handling</b>: false.
      * <b>client.http.client.disable-automatic-retries</b>: false.
+     * <b>client.http.client.disable-content-compression</b>: false.
      * <b>client.http.client.max-connections-per-route</b>: 200.
      * <b>client.http.client.http.client.default-timeout</b>: 15000 ms.
      * <b>client.http.client.http.client.connect-timeout</b>: 15000 ms.
@@ -89,6 +75,7 @@ public abstract class MnuboSDKFactory {
      * <b>client.config.autentication-port</b>: Authentication server port.
      * <b>client.http.client.disable-redirect-handling</b>: Disable automatic redirect handling
      * <b>client.http.client.disable-automatic-retries</b>: Disables automatic request recovery and re-execution.
+     * <b>client.http.client.disable-content-compression</b>: Disables (gzip) compression of the request content.
      * <b>client.http.client.max-connections-per-route</b>: The maximum number of connections per route.
      * <b>client.http.client.http.client.default-timeout</b>: The number of seconds a session can be idle before it is abandoned.
      * <b>client.http.client.http.client.connect-timeout</b>: This is timeout in seconds until  a connection is established.
@@ -134,6 +121,9 @@ public abstract class MnuboSDKFactory {
         if (properties.containsKey(CLIENT_DISABLE_AUTOMATIC_RETRIES)) {
             configBuilder.withHttpDisableAutomaticRetries(properties.getProperty(CLIENT_DISABLE_AUTOMATIC_RETRIES));
         }
+        if (properties.containsKey(CLIENT_DISABLE_CONTENT_COMPRESSION)) {
+            configBuilder.withHttpDisableContentCompression(properties.getProperty(CLIENT_DISABLE_CONTENT_COMPRESSION));
+        }
         if (properties.containsKey(CLIENT_MAX_CONNECTIONS_PER_ROUTE)) {
             configBuilder.withHttpMaxConnectionPerRoute(properties.getProperty(CLIENT_MAX_CONNECTIONS_PER_ROUTE));
         }
@@ -172,6 +162,7 @@ public abstract class MnuboSDKFactory {
      * <b>client.config.autentication-port</b>: Authentication server port.
      * <b>client.http.client.disable-redirect-handling</b>: Disable automatic redirect handling
      * <b>client.http.client.disable-automatic-retries</b>: Disables automatic request recovery and re-execution.
+     * <b>client.http.client.disable-content-compression</b>: Disables (gzip) compression of the request content.
      * <b>client.http.client.max-connections-per-route</b>: The maximum number of connections per route.
      * <b>client.http.client.http.client.default-timeout</b>: The number of seconds a session can be idle before it is abandoned.
      * <b>client.http.client.http.client.connect-timeout</b>: This is timeout in seconds until  a connection is established.
@@ -207,6 +198,7 @@ public abstract class MnuboSDKFactory {
      * <b>client.config.autentication-port</b>: Authentication server port.
      * <b>client.http.client.disable-redirect-handling</b>: Disable automatic redirect handling
      * <b>client.http.client.disable-automatic-retries</b>: Disables automatic request recovery and re-execution.
+     * <b>client.http.client.disable-content-compression</b>: Disables (gzip) compression of the request content.
      * <b>client.http.client.max-connections-per-route</b>: The maximum number of connections per route.
      * <b>client.http.client.http.client.default-timeout</b>: The number of seconds a session can be idle before it is abandoned.
      * <b>client.http.client.http.client.connect-timeout</b>: This is timeout in seconds until  a connection is established.

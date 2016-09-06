@@ -1,20 +1,6 @@
 package com.mnubo.java.sdk.client.config;
 
-import static com.mnubo.java.sdk.client.Constants.AUTHENTICATION_PORT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_BASE_PATH;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECTION_REQUEST_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DEFAULT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_AUTOMATIC_RETRIES;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_REDIRECT_HANDLING;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_CONNECTIONS_PER_ROUTE;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_TOTAL_CONNECTION;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_SOCKET_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.HOST_NAME;
-import static com.mnubo.java.sdk.client.Constants.INGESTION_PORT;
-import static com.mnubo.java.sdk.client.Constants.RESTITUTION_PORT;
-import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_KEY;
-import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_SECRET;
+import static com.mnubo.java.sdk.client.Constants.*;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.parseAsBoolean;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.parseAsHttpProtocol;
 import static com.mnubo.java.sdk.client.utils.ValidationUtils.parseAsInteger;
@@ -42,6 +28,7 @@ public class MnuboSDKConfig {
     private final boolean httpDisableRedirectHandling;
     private final boolean httpDisableAutomaticRetries;
     private final boolean httpSystemPropertiesEnable = DEFAULT_SYSTEM_PROPERTIES_ENABLE;
+    private final boolean httpDisableContentCompression;
     private final int httpMaxTotalConnection;
     private final int httpMaxConnectionPerRoute;
     private final int httpDefaultTimeout;
@@ -55,7 +42,7 @@ public class MnuboSDKConfig {
                            boolean httpDisableRedirectHandling, String basePath,
                            boolean httpDisableAutomaticRetries, int httpSoketTimeout,
                            int httpMaxTotalConnection, int httpMaxConnectionPerRoute, int httpConnectionTimeout,
-                           int httpConnectionRequestTimeout) {
+                           int httpConnectionRequestTimeout, boolean httpDisableContentCompression) {
 
         this.hostName = parseAsString(hostName, HOST_NAME);
         this.SecurityConsumerKey = parseAsString(SecurityConsumerKey, SECURITY_CONSUMER_KEY);
@@ -76,6 +63,7 @@ public class MnuboSDKConfig {
                 CLIENT_CONNECTION_REQUEST_TIMEOUT);
         this.httpMaxConnectionPerRoute = parseAsInteger(Integer.toString(httpMaxConnectionPerRoute),
                 CLIENT_MAX_CONNECTIONS_PER_ROUTE);
+        this.httpDisableContentCompression = parseAsBoolean(Boolean.toString(httpDisableContentCompression), CLIENT_DISABLE_CONTENT_COMPRESSION);
         this.httpConnectionTimeout = parseAsInteger(Integer.toString(httpConnectionTimeout), CLIENT_CONNECT_TIMEOUT);
         this.httpSoketTimeout = parseAsInteger(Integer.toString(httpSoketTimeout), CLIENT_SOCKET_TIMEOUT);
     }
@@ -124,6 +112,10 @@ public class MnuboSDKConfig {
         return httpDisableAutomaticRetries;
     }
 
+    public boolean isHttpDisableContentCompression() {
+        return httpDisableContentCompression;
+    }
+
     public boolean isHttpSystemPropertiesEnable() {
         return httpSystemPropertiesEnable;
     }
@@ -166,6 +158,7 @@ public class MnuboSDKConfig {
         public final static String DEFAULT_BASE_PATH = "/api/v3";
         public final static boolean DEFAULT_DISABLE_REDIRECT_HANDLING = false;
         public final static boolean DEFAULT_DISABLE_AUTOMATIC_RETRIES = false;
+        public final static boolean DEFAULT_DISABLE_CONTENT_COMPRESSION = false;
 
         private String hostName;
         private String SecurityConsumerKey;
@@ -176,6 +169,7 @@ public class MnuboSDKConfig {
         private String httpProtocol = DEFAULT_CLIENT_PROTOCOL;
         private boolean httpDisableRedirectHandling = DEFAULT_DISABLE_REDIRECT_HANDLING;
         private boolean httpDisableAutomaticRetries = DEFAULT_DISABLE_AUTOMATIC_RETRIES;
+        private boolean httpDisableContentCompression = DEFAULT_DISABLE_CONTENT_COMPRESSION;
         private int httpMaxTotalConnection = DEFAULT_MAX_TOTAL_CONNECTIONS;
         private int httpMaxConnectionPerRoute = DEFAULT_MAX_CONNECTIONS_PER_ROUTE;
         private int httpDefaultTimeout = DEFAULT_TIMEOUT;
@@ -225,6 +219,12 @@ public class MnuboSDKConfig {
             return this;
         }
 
+        public Builder withHttpDisableContentCompression(String httpDisableContentCompression) {
+            this.httpDisableContentCompression = parseAsBoolean(httpDisableContentCompression,
+                    CLIENT_DISABLE_CONTENT_COMPRESSION);
+            return this;
+        }
+
         public Builder withHttpDisableAutomaticRetries(String httpDisableAutomaticRetries) {
             this.httpDisableAutomaticRetries = parseAsBoolean(httpDisableAutomaticRetries,
                     CLIENT_DISABLE_AUTOMATIC_RETRIES);
@@ -271,7 +271,7 @@ public class MnuboSDKConfig {
             return new MnuboSDKConfig(hostName, SecurityConsumerKey, SecurityConsumerSecret, platformPort, restitutionPort,
                     authenticationPort, httpProtocol, httpDefaultTimeout, httpDisableRedirectHandling, basePath,
                     httpDisableAutomaticRetries, httpSocketTimeout, httpMaxTotalConnection, httpMaxConnectionPerRoute,
-                    httpConnectionTimeout, httpConnectionRequestTimeout);
+                    httpConnectionTimeout, httpConnectionRequestTimeout, httpDisableContentCompression);
         }
     }
 

@@ -1,27 +1,7 @@
 package com.mnubo.java.sdk.client.config;
 
-import static com.mnubo.java.sdk.client.Constants.AUTHENTICATION_PORT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_BASE_PATH;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECTION_REQUEST_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_CONNECT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DEFAULT_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_AUTOMATIC_RETRIES;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_DISABLE_REDIRECT_HANDLING;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_CONNECTIONS_PER_ROUTE;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_MAX_TOTAL_CONNECTION;
-import static com.mnubo.java.sdk.client.Constants.CLIENT_SOCKET_TIMEOUT;
-import static com.mnubo.java.sdk.client.Constants.HOST_NAME;
-import static com.mnubo.java.sdk.client.Constants.HTTP_PROTOCOL;
-import static com.mnubo.java.sdk.client.Constants.INGESTION_PORT;
-import static com.mnubo.java.sdk.client.Constants.RESTITUTION_PORT;
-import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_KEY;
-import static com.mnubo.java.sdk.client.Constants.SECURITY_CONSUMER_SECRET;
-import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.Builder.DEFAULT_BASE_PATH;
-import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.Builder.DEFAULT_CLIENT_PROTOCOL;
-import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.Builder.DEFAULT_HOST_PORT;
-import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.Builder.DEFAULT_MAX_CONNECTIONS_PER_ROUTE;
-import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.Builder.DEFAULT_MAX_TOTAL_CONNECTIONS;
-import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.Builder.DEFAULT_TIMEOUT;
+import static com.mnubo.java.sdk.client.Constants.*;
+import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.Builder.*;
 import static com.mnubo.java.sdk.client.config.MnuboSDKConfig.DEFAULT_SCOPE;
 import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
@@ -92,6 +72,11 @@ public class MnuboSDKConfigTest {
             put("", format("%s property has to be a valid String.", CLIENT_DISABLE_AUTOMATIC_RETRIES));
             put("maybe", format("%s property has to be a boolean valid.", CLIENT_DISABLE_AUTOMATIC_RETRIES));
         }});
+        put(CLIENT_DISABLE_CONTENT_COMPRESSION, new HashMap<String, String>() {{
+            put(null, format("%s property has to be a valid String.", CLIENT_DISABLE_CONTENT_COMPRESSION));
+            put("", format("%s property has to be a valid String.", CLIENT_DISABLE_CONTENT_COMPRESSION));
+            put("maybe", format("%s property has to be a boolean valid.", CLIENT_DISABLE_CONTENT_COMPRESSION));
+        }});
         put(CLIENT_MAX_CONNECTIONS_PER_ROUTE, new HashMap<String, String>() {{
             put(null, format("%s property has to be a valid String.", CLIENT_MAX_CONNECTIONS_PER_ROUTE));
             put("", format("%s property has to be a valid String.", CLIENT_MAX_CONNECTIONS_PER_ROUTE));
@@ -136,7 +121,7 @@ public class MnuboSDKConfigTest {
     }};
 
     @Test
-    public void defaulConfig() {
+    public void defaultConfig() {
         MnuboSDKConfig config = MnuboSDKConfig.builder().withHostName("host").withSecurityConsumerKey("CK")
                 .withSecurityConsumerSecret("CS").build();
 
@@ -154,6 +139,7 @@ public class MnuboSDKConfigTest {
         assertThat(config.getPlatformPort(), is(equalTo(DEFAULT_HOST_PORT)));
         assertThat(config.getRestitutionPort(), is(equalTo(DEFAULT_HOST_PORT)));
         assertThat(config.getScope(), is(equalTo(DEFAULT_SCOPE)));
+        assertThat(config.isHttpDisableContentCompression(), is(equalTo(DEFAULT_DISABLE_CONTENT_COMPRESSION)));
     }
 
     @Test
@@ -161,7 +147,8 @@ public class MnuboSDKConfigTest {
         MnuboSDKConfig config = MnuboSDKConfig.builder().withHostName("host").withSecurityConsumerKey("CK")
                                               .withSecurityConsumerSecret("CS").withIngestionPort("1111").withHttpBasePath("/yyy/iii")
                                               .withHttpProtocol("http").withHttpConnectionRequestTimeout("20").withHttpSocketTimeout("500")
-                                              .withRestitutionPort("2222").build();
+                                              .withRestitutionPort("2222")
+                                              .withHttpDisableContentCompression("true").build();
 
         assertThat(config.getHostName(), is(equalTo("host")));
         assertThat(config.getSecurityConsumerKey(), is(equalTo("CK")));
@@ -177,6 +164,7 @@ public class MnuboSDKConfigTest {
         assertThat(config.getPlatformPort(), is(equalTo(1111)));
         assertThat(config.getRestitutionPort(), is(equalTo(2222)));
         assertThat(config.getScope(), is(equalTo(DEFAULT_SCOPE)));
+        assertThat(config.isHttpDisableContentCompression(), is(equalTo(true)));
     }
 
     @Test
@@ -235,6 +223,9 @@ public class MnuboSDKConfigTest {
                 break;
             case CLIENT_DISABLE_AUTOMATIC_RETRIES:
                 config.withHttpDisableAutomaticRetries(value);
+                break;
+            case CLIENT_DISABLE_CONTENT_COMPRESSION:
+                config.withHttpDisableContentCompression(value);
                 break;
             case CLIENT_MAX_CONNECTIONS_PER_ROUTE:
                 config.withHttpMaxConnectionPerRoute(value);

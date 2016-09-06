@@ -21,6 +21,7 @@ public class Constants {
     public static final String CLIENT = "client.http.client.";
     public static final String CLIENT_DISABLE_REDIRECT_HANDLING = CLIENT + "disable-redirect-handling";
     public static final String CLIENT_DISABLE_AUTOMATIC_RETRIES = CLIENT + "disable-automatic-retries";
+    public static final String CLIENT_DISABLE_CONTENT_COMPRESSION = CLIENT + "disable-content-compression";
     public static final String CLIENT_MAX_CONNECTIONS_PER_ROUTE = CLIENT + "max-connections-per-route";
     public static final String CLIENT_DEFAULT_TIMEOUT = CLIENT + "http.client.default-timeout";
     public static final String CLIENT_CONNECT_TIMEOUT = CLIENT + "http.client.connect-timeout";
