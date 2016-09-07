@@ -4,6 +4,7 @@ import static com.mnubo.java.sdk.client.Constants.CLIENT_VALIDATE_INACTIVITY_SER
 
 import java.util.List;
 
+import com.mnubo.java.sdk.client.mapper.GzipRequestInterceptor;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -29,6 +30,10 @@ class HttpRestTemplate {
         ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
         restTemplate = new RestTemplate(requestFactory);
         configureMapper(ObjectMapperConfig.genericObjectMapper);
+
+        if(!config.isHttpDisableContentCompression()){
+            restTemplate.getInterceptors().add(new GzipRequestInterceptor());
+        }
     }
 
     private void configureMapper(ObjectMapper objectMapper) {
@@ -45,6 +50,7 @@ class HttpRestTemplate {
         // Setting request config
         RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(config.getHttpDefaultTimeout())
                 .setConnectionRequestTimeout(config.getHttpConnectionRequestTimeout())
+                .setDecompressionEnabled(!config.isHttpDisableContentCompression())
                 .setSocketTimeout(config.getHttpSoketTimeout()).build();
 
         // Setting pooling management
@@ -65,6 +71,9 @@ class HttpRestTemplate {
         }
         if (config.isHttpDisableAutomaticRetries()) {
             httpClientsBuilder.disableAutomaticRetries();
+        }
+        if (config.isHttpDisableContentCompression()) {
+            httpClientsBuilder.disableContentCompression();
         }
         if (config.isHttpSystemPropertiesEnable()) {
             httpClientsBuilder.useSystemProperties();
